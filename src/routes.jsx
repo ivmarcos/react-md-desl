@@ -46,27 +46,11 @@ function asyncComponent(getComponent) {
 
 
 const routes = [
+
   {
-    //eslint-disable-next-line
-    label: ({ diretorioRaiz }) => {
-
-      return diretorioRaiz ? diretorioRaiz.nome : 'Meus arquivos';
-
-    },
-    path: '/items/:id?',
-    icon: 'inbox',
-    //eslint-disable-next-line
-    to: ({ diretorioRaiz }) => {
-
-      return diretorioRaiz ? `/raiz/${diretorioRaiz.id}` : '/items/';
-
-    },
-    component: asyncComponent(loadItems),
-  },
-  {
-    path: '/raiz/:id?', // link criado para restringir a visualização somente a pasta raiz informada na url
+    path: '/', // link criado para restringir a visualização somente a pasta raiz informada na url
     link: false, // impede de gerar link neste caso para o menu
-    component: asyncComponent(loadItems),
+    component: asyncComponent(loadHome),
   },
 ];
 

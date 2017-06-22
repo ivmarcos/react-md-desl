@@ -11,18 +11,14 @@ export const createApi = (url, options) => {
     ...options,
   });
 
-  created.interceptors.request.use(request => request, (error) => {
+  created.interceptors.request.use(request => request, error => Promise.reject(error));
 
-    const msg = 'Erro ao tentar enviar dados.';
-    console.error(msg, error, error.request);
-    return Promise.reject({ ...error, msg });
-
-  });
   created.interceptors.response.use(response => response, (error) => {
 
     console.log('error', error.response);
 
     const data = error.response.data;
+
     let result;
 
     if (data) {

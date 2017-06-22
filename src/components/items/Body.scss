@@ -1,0 +1,29 @@
+@import '../../globals';
+
+.body-linha{
+  td{
+    vertical-align: middle !important;
+    padding-bottom: 5px !important;
+    padding-top: 5px !important;
+  }
+  //padding-bottom: 
+}
+.body-icone{
+  margin-right: 10px;
+}
+.body-icone-info{
+  font-size: 1.2em;
+  color: $md-grey-600;
+  margin: 10px;
+}
+.body-coluna-icone{
+  display: flex;
+  align-items: center;
+  i {
+    margin-right: 10px;
+  }
+}
+.body-avatar{
+  margin-right: 10px;
+  margin-left: 0px;
+}

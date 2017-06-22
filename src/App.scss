@@ -1,0 +1,52 @@
+/* Definições globais da app */
+
+@import 'globals';
+
+@include react-md-everything;
+
+
+/* override do react-md, evitar sempre que necessário */
+.md-avatar{
+  border: none !important;
+}
+
+a{
+  text-decoration: none;
+}
+
+.md-dialog{
+  min-width: 500px;
+  border-radius: 2px;
+}
+
+.md-data-table--responsive {
+   // overflow-x: inherit !important;
+}
+
+/* definição de classes personalizadas, olhar antes a documentação do react-md para evitar reinventar a roda:
+  https://react-md.mlaursen.com/customization/colors
+  https://react-md.mlaursen.com/customization/media-queries
+  https://react-md.mlaursen.com/customization/grids
+  https://react-md.mlaursen.com/customization/typography 
+  https://react-md.mlaursen.com/sassdoc/
+  ..
+*/
+
+.app-secao{
+  padding: 32px;
+}
+
+.app-secao-titulo{
+  margin-bottom: 30px !important;
+}
+
+.app-menu-novo{
+  padding: 10px;
+  text-align: center;
+}
+
+.md-center{
+  margin-left: auto; 
+  margin-right: auto;
+  text-align: center;
+}

@@ -1,0 +1,17 @@
+{
+  "name": "arquivos-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "upgrade": "yarn upgrade ssh://disem7.intranet.bb.com.br:29418/bb-common.git --prefer-offline"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "app-module-path": "^2.2.0",
+    "bb-common": "ssh://disem7.intranet.bb.com.br:29418/bb-common.git"
+  },
+  "devDependencies": {}
+}

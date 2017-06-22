@@ -1,0 +1,10 @@
+node_modules/
+.vscode
+yarn.lock
+public
+yarn-error.log
+log
+typings
+npm-debug.log
+*.sql
+*.dump

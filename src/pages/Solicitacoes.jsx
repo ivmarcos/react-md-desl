@@ -6,6 +6,36 @@ import Button from 'react-md/lib/Buttons/Button';
 import TabelaSolicitacoes from 'components/TabelaSolicitacoes';
 import Solicitacao from 'components/Solicitacao';
 
+
+const solicitacoes = [
+  {
+    id: 1,
+    dataHoraInclusao: new Date(),
+    funcionario: {
+      id: 1,
+      chave: 'F6805293',
+      nome: 'Marcos Andrei Ivanechtchuk',
+    },
+    tipoStatus: {
+      id: 1,
+      nome: 'Solicitada',
+    },
+  },
+  {
+    id: 2,
+    dataHoraInclusao: new Date(),
+    funcionario: {
+      id: 1,
+      chave: 'F6805293',
+      nome: 'Marcos Andrei Ivanechtchuk',
+    },
+    tipoStatus: {
+      id: 1,
+      nome: 'Solicitada',
+    },
+  },
+];
+
 class Solicitacoes extends Component {
 
 
@@ -14,7 +44,7 @@ class Solicitacoes extends Component {
     super(props);
 
     this.state = {
-      detalhe: true,
+      detalhe: false,
       solicitacaoSelecionada: null,
     };
 
@@ -55,7 +85,9 @@ class Solicitacoes extends Component {
         />
 
         <Card>
-          <TabelaSolicitacoes />
+          <TabelaSolicitacoes
+            solicitacoes={solicitacoes}
+          />
         </Card>
 
         <Solicitacao

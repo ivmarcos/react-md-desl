@@ -7,6 +7,8 @@ import './Home.scss';
 const Home = ({ usuario }) => (
   <div>
     {usuario.nome}
+    <div style={{ height: 100, width: 100, background: 'yellow' }} onContextMenu={() => console.log('okkay')} />
+
   </div>
   );
 

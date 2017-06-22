@@ -123,7 +123,7 @@ module.exports = {
           // Webpack 2 fixes this, but for now we include this hack.
           // https://github.com/facebookincubator/create-react-app/issues/1713
           /\.(js|jsx)(\?.*)?$/,
-          /\.scss$/,
+          /\.s?css$/,
           /\.json$/,
           /\.svg$/,
         ],
@@ -152,8 +152,8 @@ module.exports = {
       // In production, we use a plugin to extract that CSS to a file, but
       // in development "style" loader enables hot editing of CSS.
       {
-        test: /\.scss$/,
-        include: paths.appSrc,
+        test: /\.s?css$/,
+//        include: paths.appSrc,
         loader: 'style!css?!sass?sourceMap!postcss',
       },
       // JSON is not enabled by default in Webpack but both Node and Browserify
@@ -175,7 +175,7 @@ module.exports = {
     ],
   },
 
-  // We use PostCSS for autoprefixing only.
+  // We use Postcss for autoprefixing only.
   postcss() {
 
     return [

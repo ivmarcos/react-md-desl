@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import dateformat from 'lib/dateformat';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import DataTable from 'react-md/lib/DataTables/DataTable';
 import TableHeader from 'react-md/lib/DataTables/TableHeader';
 import TableRow from 'react-md/lib/DataTables/TableRow';
+import TableBody from 'react-md/lib/DataTables/TableBody';
 import TableColumn from 'react-md/lib/DataTables/TableColumn';
 
 function sort(array, key, direction) {
@@ -21,7 +23,7 @@ function sort(array, key, direction) {
     if (valueA === undefined) return inferior;
     if (valueB === undefined) return inferior;
 
-    return valueA.toLowerCase() > valueB.toLowerCase() ? superior : inferior;
+    return valueA > valueB ? superior : inferior;
 
   });
 
@@ -29,16 +31,12 @@ function sort(array, key, direction) {
 
 }
 
+
 const defaultColumns = [
   {
-    label: 'Nome',
-    key: 'nome',
+    label: '#',
+    key: 'id',
     size: 25,
-  },
-  {
-    label: 'Proprietário',
-    key: 'usuarioInclusao.nome',
-    size: 15,
   },
   {
     label: 'Criado em',
@@ -46,11 +44,12 @@ const defaultColumns = [
     size: 10,
   },
   {
-    label: 'Tamanho',
-    key: 'tamanho',
+    label: 'Status',
+    key: 'tipoStatus.nome',
     size: 10,
   },
 ];
+
 
 class TabelaSolicitacoes extends Component {
 
@@ -60,20 +59,20 @@ class TabelaSolicitacoes extends Component {
 
   componentWillMount() {
 
-    const { items } = this.props;
+    const { solicitacoes } = this.props;
 
     this.setState({
-      items,
+      solicitacoes,
     });
 
   }
 
   componentWillReceiveProps(nextProps) {
 
-    if (this.props.items !== nextProps.items) {
+    if (this.props.solicitacoes !== nextProps.solicitacoes) {
 
       this.setState({
-        items: nextProps.items,
+        solicitacoes: nextProps.solicitacoes,
       });
 
     }
@@ -83,7 +82,9 @@ class TabelaSolicitacoes extends Component {
 
   handleSort = (columnClicked) => {
 
-    const { columns, items } = this.state;
+    console.log('column clicked', columnClicked);
+
+    const { columns, solicitacoes } = this.state;
     const column = columnClicked;
 
     column.sorted = !column.sorted;
@@ -100,7 +101,7 @@ class TabelaSolicitacoes extends Component {
     });
 
     this.setState({
-      items: sort(items, column.key, column.sorted),
+      solicitacoes: sort(solicitacoes, column.key, column.sorted),
     });
 
   }
@@ -108,6 +109,7 @@ class TabelaSolicitacoes extends Component {
   render() {
 
     const { columns } = this.state;
+    const { solicitacoes } = this.props;
 
     return (
       <DataTable plain>
@@ -116,6 +118,7 @@ class TabelaSolicitacoes extends Component {
             {columns.map(column => (
               <TableColumn
                 key={column.key}
+                onClick={() => this.handleSort(column)}
                 sorted={column.sorted}
               >
                 {column.label}
@@ -123,16 +126,27 @@ class TabelaSolicitacoes extends Component {
             ))}
           </TableRow>
         </TableHeader>
-        <TableRow>
-          {columns.map(column => (
-            <TableColumn
-              key={column.key}
-              sorted={column.sorted}
-            >
-              {column.label}
-            </TableColumn>
+        <TableBody>
+
+          {solicitacoes.map(({ id, dataHoraInclusao, tipoStatus }) => (
+            <TableRow>
+
+              <TableColumn>
+                {id}
+              </TableColumn>
+
+              <TableColumn>
+                {dateformat(dataHoraInclusao, 'mediumDate')}
+              </TableColumn>
+
+              <TableColumn>
+                {tipoStatus.nome}
+              </TableColumn>
+
+            </TableRow>
           ))}
-        </TableRow>
+
+        </TableBody>
       </DataTable>
 
     );
@@ -141,7 +155,7 @@ class TabelaSolicitacoes extends Component {
 }
 
 TabelaSolicitacoes.propTypes = {
-  items: PropTypes.array.isRequired,
+  solicitacoes: PropTypes.array.isRequired,
 };
 
 export default TabelaSolicitacoes;

@@ -3,11 +3,11 @@ const path = require('path');
 /* configurações gerais do backend*/
 module.exports = {
 
-  port: 3003,
+  port: 3007,
 
-  name: 'arquivos',
+  name: 'deslocamento',
 
-  path: 'arquivos',
+  path: 'deslocamento',
 
   public: path.join(__dirname, '../public'),
 

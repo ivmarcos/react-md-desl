@@ -4,9 +4,9 @@
 const env = process.env.AMBIENTE || 'desenvolvimento';
 
 const commonConfig = {
-  title: 'Arquivos',
-  path: 'arquivos',
-  port: 3003,
+  title: 'Deslocamento',
+  path: 'deslocamento',
+  port: 3007,
   baseUrl: '',
 };
 

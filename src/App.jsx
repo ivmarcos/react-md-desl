@@ -81,10 +81,11 @@ class App extends Component {
         <section className="app-secao">
 
           <ReactCSSTransitionGroup
-            transitionName="md-cross-fade"
-            transitionAppear={false}
+            // transitionName="md-cross-fade"
+            transitionEnter={false}
+            transitionLeave={false}
             transitionEnterTimeout={250}
-            transitionLeaveTimeout={10}
+            // transitionLeaveTimeout={10}
           >
 
             <Switch key={location.key}>

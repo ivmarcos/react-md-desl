@@ -49,18 +49,21 @@ function asyncComponent(getComponent) {
 const routes = [
   {
     path: '/',
+    exact: true,
     label: 'Home',
     icon: 'bookmark',
     component: asyncComponent(loadHome),
   },
   {
     path: '/solicitacoes',
+    exact: true,
     label: 'Solicitações',
     icon: 'card_travel',
     component: asyncComponent(loadSolicitacoes),
   },
   {
     path: '/despacho',
+    exact: true,
     label: 'Despacho',
     icon: 'check_circle',
     component: asyncComponent(loadDespacho),

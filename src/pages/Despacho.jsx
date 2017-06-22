@@ -1,19 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Card from 'react-md/lib/Cards/Card';
+import TabelaSolicitacoes from 'components/TabelaSolicitacoes';
+import Button from 'react-md/lib/Buttons/Button';
 
-import './Home.scss';
-
-const Home = ({ usuario }) => (
-  <div>
-    {usuario.nome}
-  </div>
-  );
-
-Home.propTypes = {
-  usuario: PropTypes.object.isRequired,
-};
+const Despacho = () => (
+  <Card>
+    <Button
+      floating
+      secondary
+      fixed
+    >
+      add
+    </Button>
+    <TabelaSolicitacoes />
+  </Card>
+);
 
 const mapState = ({ app: { usuario } }) => ({ usuario });
 
-export default connect(mapState)(Home);
+Despacho.propTypes = {
+  usuario: PropTypes.object.isRequired,
+};
+export default connect(mapState)(Despacho);

@@ -78,8 +78,19 @@ const defaultColumns = [
   },
 ];
 
+const DESPACHO = {
+  id: 1,
+  label: 'Despachar',
+};
 
-class TabelaSolicitacoes extends Component {
+const CANCELAMENTO = {
+  id: 1,
+  label: 'Cancelar',
+};
+
+const ACOES = [DESPACHO, CANCELAMENTO];
+
+class TabelaDespacho extends Component {
 
   constructor(props) {
 
@@ -92,6 +103,8 @@ class TabelaSolicitacoes extends Component {
         top: 0,
         left: 0,
       },
+      selectedRows: [],
+      count: 0,
     };
 
     this.handleSort = this.handleSort.bind(this);
@@ -176,8 +189,9 @@ class TabelaSolicitacoes extends Component {
 
   }
 
-  handleMenuClick = () => {
+  handleMenuClick = (acao) => {
 
+    console.log('acao', acao);
     alert('stopped');
 
   }
@@ -198,6 +212,26 @@ class TabelaSolicitacoes extends Component {
 
   }
 
+  handleRowToggle = (row, toggled, count) => {
+
+    const { solicitacoes } = this.props;
+
+    let selectedRows = [];
+
+    if (row === -1) {
+
+      selectedRows = solicitacoes.map(() => toggled);
+
+    } else {
+
+      selectedRows[row] = toggled;
+
+    }
+
+    this.setState({ count, selectedRows });
+
+  };
+
 
   render() {
 
@@ -217,12 +251,15 @@ class TabelaSolicitacoes extends Component {
           onClose={this.handleCloseMenu}
           position={Menu.Positions.CONTEXT}
         >
-          <ListItem primaryText="Redo" onClick={this.handleMenuClick} />
-          <ListItem disabled primaryText="Cut" onClick={this.handleMenuClick} />
-          <ListItem disabled primaryText="Paste" onClick={this.handleMenuClick} />
+          {ACOES.map(acao => (
+            <ListItem
+              primaryText={acao.label}
+              onClick={() => this.handleMenuClick(acao)}
+            />
+          ))}
         </Menu>
 
-        <DataTable plain>
+        <DataTable >
 
           <TableHeader>
             <TableRow >
@@ -299,8 +336,8 @@ class TabelaSolicitacoes extends Component {
   }
 }
 
-TabelaSolicitacoes.propTypes = {
+TabelaDespacho.propTypes = {
   solicitacoes: PropTypes.array.isRequired,
 };
 
-export default TabelaSolicitacoes;
+export default TabelaDespacho;

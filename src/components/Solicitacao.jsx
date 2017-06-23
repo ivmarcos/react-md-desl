@@ -13,10 +13,12 @@ import CardText from 'react-md/lib/Cards/CardText';
 import SelectField from 'react-md/lib/SelectFields';
 import VirtualizedSelect from 'react-virtualized-select';
 
-import 'react-select/dist/react-select.css';
+
 import 'react-virtualized/styles.css';
 import 'react-virtualized-select/styles.css';
+import './Select.css';
 import './Solicitacao.scss';
+
 
 const steps = [{ title: 'Solicitada' }, { title: 'Despachada' }, { title: 'Aprovada' }];
 
@@ -100,16 +102,31 @@ class Solicitacao extends Component {
 
   }
 
+  componentWillReceiveProps(nextProps) {
+
+    if (this.props.solicitacao !== nextProps.solicitacao) {
+
+      this.setState({
+        solicitacao: nextProps.solicitacao,
+      });
+
+    }
+
+  }
+
 
   render() {
 
-    const { visivel, onClose, solicitacao } = this.props;
+    const { visivel, onClose, onSave } = this.props;
+
+    const { solicitacao } = this.state;
+
 
     const nav = <Button icon onClick={onClose}>close</Button>;
 
     const action = [
-      <Button flat label="fechar" onClick={onClose} />,
-      <Button flat label="salvar" onClick={onClose} />,
+      <Button flat label="fechar" onClick={onClose}>close</Button>,
+      <Button flat label="salvar" onClick={() => onSave(solicitacao)} >save</Button>,
     ];
 
     return (
@@ -291,6 +308,7 @@ class Solicitacao extends Component {
 Solicitacao.propTypes = {
   visivel: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
   solicitacao: PropTypes.object,
 };
 

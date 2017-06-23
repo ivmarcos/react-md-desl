@@ -1,12 +1,18 @@
 .Solicitacao-card{
   margin-top: 15px;
 }
-.Select{
-  background: none !important;
-  border: none !important;
-}
-.Select-control{
+.Select, .Select-value, .Select-control{
+  background: none;
   border: none;
   border-radius: 0px;
+  box-shadow: none;
+  &:focus{
+    box-shadow: none;
+  }
+  &:hover{
+    box-shadow: none;
+  }
+}
+.Select-control{
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }

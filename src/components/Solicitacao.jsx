@@ -1,3 +1,5 @@
+/* eslint-disable react/no-array-index-key */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Dialog from 'react-md/lib/Dialogs';
@@ -51,6 +53,8 @@ class Solicitacao extends Component {
 
     const { solicitacao } = this.state;
 
+    console.log('field', field, 'value', value);
+
     this.setState({
       solicitacao: { ...solicitacao, [field]: value },
     });
@@ -60,6 +64,8 @@ class Solicitacao extends Component {
   handleChangeTrecho({ field, value, index }) {
 
     const { solicitacao, solicitacao: { trechos } } = this.state;
+
+    console.log('field', field, 'value', value, 'index', index);
 
     const trecho = { ...trechos[index], [field]: value };
 
@@ -134,13 +140,15 @@ class Solicitacao extends Component {
                   className="md-cell md-cell--6"
                 />
 
+                {solicitacao.descricao}
+
                 <DatePicker
                   id="dataInicio"
                   label="Data início"
                   displayMode="landscape"
                   className="md-cell md-cell--6"
                   onChange={value => this.handleChange({ field: 'dataHoraInicio', value })}
-                  value={solicitacao.dataHoraInicio}
+                  defaultValue={solicitacao.dataHoraInicio}
                   cancelLabel="Cancelar"
                 />
 
@@ -150,7 +158,7 @@ class Solicitacao extends Component {
                   displayMode="landscape"
                   className="md-cell md-cell--6"
                   onChange={value => this.handleChange({ field: 'dataHoraInicio', value })}
-                  value={solicitacao.dataHoraInicio}
+                  defaultValue={solicitacao.dataHoraInicio}
                   cancelLabel="Cancelar"
                 />
 
@@ -160,7 +168,7 @@ class Solicitacao extends Component {
                   displayMode="landscape"
                   className="md-cell md-cell--6"
                   onChange={value => this.handleChange({ field: 'dataHoraTermino', value })}
-                  value={solicitacao.dataHoraTermino}
+                  defaultValue={solicitacao.dataHoraTermino}
                   cancelLabel="Cancelar"
                 />
 
@@ -170,7 +178,7 @@ class Solicitacao extends Component {
                   displayMode="landscape"
                   className="md-cell md-cell--6"
                   onChange={value => this.handleChange({ field: 'dataHoraTermino', value })}
-                  value={solicitacao.dataHoraTermino}
+                  defaultValue={solicitacao.dataHoraTermino}
                   cancelLabel="Cancelar"
                 />
 
@@ -192,7 +200,7 @@ class Solicitacao extends Component {
           {solicitacao.trechos.map((trecho, index) => (
 
             <Card
-              key={trecho.id}
+              key={`a${index}`}
               className="Solicitacao-card"
             >
 

@@ -9,9 +9,23 @@ module.exports = sequelize.define('HistoricoStatusSolicitacaoDeslocamento', {
     autoIncrement: true,
   },
 
-  nome: {
-    type: Sequelize.STRING,
-    unique: true,
+  solicitacao_id: {
+    type: Sequelize.BIGINT,
+    associate: {
+      model: 'TipoStatusDeslocamento',
+    },
+  },
+
+  usuarioInclusao_id: {
+    type: Sequelize.BIGINT,
+    allowNull: false,
+    associate: {
+      model: 'Usuario',
+    },
+  },
+
+  dataHoraInclusao: {
+    type: Sequelize.DATE,
     allowNull: false,
   },
 

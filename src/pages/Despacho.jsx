@@ -1,31 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Card from 'react-md/lib/Cards/Card';
 import TabelaDespacho from 'components/TabelaDespacho';
 import Solicitacao from 'components/Solicitacao';
 
-
-const solicitacoes = [
-  {
-    id: 1,
-    dataHoraInclusao: new Date(),
-    funcionario: {
-      id: 1,
-      chave: 'F6805293',
-      nome: 'Marcos Andrei Ivanechtchuk',
-    },
-  },
-  {
-    id: 2,
-    dataHoraInclusao: new Date(),
-    funcionario: {
-      id: 1,
-      chave: 'F6805293',
-      nome: 'Marcos Andrei Ivanechtchuk',
-    },
-  },
-];
+import { buscaSolicitacoesValidacao } from 'store/solicitacao';
 
 class Despacho extends Component {
 
@@ -41,6 +20,12 @@ class Despacho extends Component {
 
     this.abreDetalhe = this.abreDetalhe.bind(this);
     this.fechaDetalhe = this.fechaDetalhe.bind(this);
+
+  }
+
+  componentWillMount() {
+
+    // this.props.buscaSolicitacoesValidacao();
 
   }
 
@@ -64,15 +49,16 @@ class Despacho extends Component {
 
     const { detalhe, solicitacaoSelecionada } = this.state;
 
+    const { solicitacoes } = this.props;
+
+
     return (
 
       <div>
 
-        <Card>
-          <TabelaDespacho
-            solicitacoes={solicitacoes}
-          />
-        </Card>
+        <TabelaDespacho
+          solicitacoes={solicitacoes}
+        />
 
         <Solicitacao
           visivel={detalhe}
@@ -88,10 +74,12 @@ class Despacho extends Component {
 }
 
 
-const mapState = ({ app: { usuario } }) => ({ usuario });
+const mapState = ({ app: { usuario }, solicitacao: { validacao } }) => ({ usuario, solicitacoes: validacao });
 
 Despacho.propTypes = {
-  usuario: PropTypes.object.isRequired,
+  // usuario: PropTypes.object.isRequired,
+  solicitacoes: PropTypes.array.isRequired,
+  ///buscaSolicitacoesValidacao: PropTypes.func.isRequired,
 };
 
-export default connect(mapState)(Despacho);
+export default connect(mapState, { buscaSolicitacoesValidacao })(Despacho);

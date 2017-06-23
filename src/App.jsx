@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route, withRouter, Switch } from 'react-router-dom';
@@ -10,6 +9,9 @@ import Snackbar from 'components/Snackbar';
 import Expirado from 'components/Expirado';
 
 import { buscaUsuarioLogado, buscaAcessos } from 'store/app';
+import { buscaMunicipios } from 'store/municipio';
+import { buscaCompanhias } from 'store/companhia';
+import { buscaTiposSolicitacao } from 'store/tipoSolicitacao';
 
 import Nav from 'components/Nav';
 
@@ -23,7 +25,13 @@ class App extends Component {
 
   componentWillMount() {
 
-    const { usuario, acessos } = this.props;
+    const {
+      usuario,
+      acessos,
+      municipios,
+      companhias,
+      tiposSolicitacao,
+    } = this.props;
 
     if (!usuario) {
 
@@ -33,7 +41,25 @@ class App extends Component {
 
     if (!acessos.length) {
 
-      //this.props.buscaAcessos();
+      this.props.buscaAcessos();
+
+    }
+
+    if (!municipios.length) {
+
+      this.props.buscaMunicipios();
+
+    }
+
+    if (!companhias.length) {
+
+      this.props.buscaCompanhias();
+
+    }
+
+    if (!tiposSolicitacao) {
+
+      this.props.buscaTiposSolicitacao();
 
     }
 
@@ -124,9 +150,15 @@ App.propTypes = {
   buscaUsuarioLogado: PropTypes.func.isRequired,
   buscaAcessos: PropTypes.func.isRequired,
   mensagens: PropTypes.array.isRequired,
+  buscaCompanhias: PropTypes.func.isRequired,
+  buscaMunicipios: PropTypes.func.isRequired,
+  buscaTiposSolicitacao: PropTypes.func.isRequired,
+  municipios: PropTypes.array.isRequired,
+  companhias: PropTypes.array.isRequired,
+  tiposSolicitacao: PropTypes.array.isRequired,
   expirado: PropTypes.bool,
 };
 
-const mapStateToProps = ({ app: { usuario, mensagens, expirado, acessos } }) => ({ usuario, mensagens, expirado, acessos });
+const mapStateToProps = ({ app: { usuario, mensagens, expirado, acessos }, municipio: { municipios }, companhia: { companhias }, tipoSolicitacao: { tipos } }) => ({ usuario, mensagens, expirado, acessos, municipios, companhias, tiposSolicitacao: tipos });
 
-export default withRouter(connect(mapStateToProps, { buscaUsuarioLogado, buscaAcessos })(App));
+export default withRouter(connect(mapStateToProps, { buscaUsuarioLogado, buscaAcessos, buscaCompanhias, buscaMunicipios, buscaTiposSolicitacao })(App));

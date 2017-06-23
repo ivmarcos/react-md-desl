@@ -1,40 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Card from 'react-md/lib/Cards/Card';
 import Button from 'react-md/lib/Buttons/Button';
 import TabelaSolicitacoes from 'components/TabelaSolicitacoes';
+import SelectButton from 'components/SelectButton';
 import Solicitacao from 'components/Solicitacao';
 
+import { buscaMinhasSolicitacoes } from 'store/solicitacao';
 
-const solicitacoes = [
-  {
-    id: 1,
-    dataHoraInclusao: new Date(),
-    funcionario: {
-      id: 1,
-      chave: 'F6805293',
-      nome: 'Marcos Andrei Ivanechtchuk',
-    },
-    tipoStatus: {
-      id: 1,
-      nome: 'Solicitada',
-    },
-  },
-  {
-    id: 2,
-    dataHoraInclusao: new Date(),
-    funcionario: {
-      id: 1,
-      chave: 'F6805293',
-      nome: 'Marcos Andrei Ivanechtchuk',
-    },
-    tipoStatus: {
-      id: 1,
-      nome: 'Solicitada',
-    },
-  },
-];
+import './Solicitacoes.scss';
 
 class Solicitacoes extends Component {
 
@@ -50,6 +24,12 @@ class Solicitacoes extends Component {
 
     this.abreDetalhe = this.abreDetalhe.bind(this);
     this.fechaDetalhe = this.fechaDetalhe.bind(this);
+
+  }
+
+  componentWillMount() {
+
+    // this.props.buscaMinhasSolicitacoes();
 
   }
 
@@ -73,26 +53,46 @@ class Solicitacoes extends Component {
 
     const { detalhe, solicitacaoSelecionada } = this.state;
 
+    const {
+      solicitacoes,
+      municipios,
+      companhias,
+      tiposSolicitacao,
+    } = this.props;
+
     return (
 
       <div>
 
-        <Button
-          raised
-          primary
-          label="Nova solicitação"
-          onClick={this.abreDetalhe}
-        />
+        <div
+          className="Solicitacoes-acoes"
+        >
 
-        <Card>
-          <TabelaSolicitacoes
-            solicitacoes={solicitacoes}
+          <SelectButton
+            id="selectButtonNumbers"
+            placeholder="Number"
+
+            menuItems={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
           />
-        </Card>
+
+          <Button
+            raised
+            label="Nova solicitação"
+            onClick={this.abreDetalhe}
+          />
+
+        </div>
+
+        <TabelaSolicitacoes
+          solicitacoes={solicitacoes}
+        />
 
         <Solicitacao
           visivel={detalhe}
           solicitacao={solicitacaoSelecionada}
+          municipios={municipios}
+          companhias={companhias}
+          tiposSolicitacao={tiposSolicitacao}
           onClose={this.fechaDetalhe}
         />
 
@@ -104,10 +104,17 @@ class Solicitacoes extends Component {
 }
 
 
-const mapState = ({ app: { usuario } }) => ({ usuario });
+const mapState = (
+  { app: { usuario }, solicitacao: { minhas }, municipio: { municipios }, companhia: { companhias }, tipoSolicitacao: { tipos } }) =>
+  ({ usuario, solicitacoes: minhas, companhias, tiposSolicitacao: tipos, municipios });
 
 Solicitacoes.propTypes = {
-  usuario: PropTypes.object.isRequired,
+  // usuario: PropTypes.object.isRequired,
+  solicitacoes: PropTypes.array.isRequired,
+  municipios: PropTypes.array.isRequired,
+  companhias: PropTypes.array.isRequired,
+  tiposSolicitacao: PropTypes.array.isRequired,
+  //buscaMinhasSolicitacoes: PropTypes.func.isRequired,
 };
 
-export default connect(mapState)(Solicitacoes);
+export default connect(mapState, { buscaMinhasSolicitacoes })(Solicitacoes);

@@ -62,9 +62,9 @@ const routes = [
     component: asyncComponent(loadSolicitacoes),
   },
   {
-    path: '/despacho',
+    path: '/validacao',
     exact: true,
-    label: 'Despacho',
+    label: 'Validação',
     icon: 'check_circle',
     component: asyncComponent(loadDespacho),
   },

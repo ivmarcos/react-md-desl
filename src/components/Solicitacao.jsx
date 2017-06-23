@@ -13,80 +13,19 @@ import CardText from 'react-md/lib/Cards/CardText';
 import SelectField from 'react-md/lib/SelectFields';
 import VirtualizedSelect from 'react-virtualized-select';
 
-
 import 'react-virtualized/styles.css';
 import 'react-virtualized-select/styles.css';
 import './Select.css';
 import './Solicitacao.scss';
 
-
 const steps = [{ title: 'Solicitada' }, { title: 'Despachada' }, { title: 'Aprovada' }];
-
-const companhias = [
-  {
-    id: 1,
-    nome: 'Latam',
-  },
-  {
-    id: 2,
-    nome: 'Gol',
-  },
-  {
-    id: 3,
-    nome: 'Avianca',
-  },
-];
-
-const municipios = [
-  {
-    id: 1,
-    nome: 'São Paulo',
-  },
-  {
-    id: 2,
-    nome: 'Rio',
-  },
-  {
-    id: 3,
-    nome: 'Brasília',
-  },
-  {
-    id: 4,
-    nome: 'Curitiba',
-  },
-];
 
 const trechos = [
   {
     id: 1,
-    origem_id: null,
-    destino_id: null,
-    dataHora: new Date(),
   },
   {
     id: 2,
-    origem_id: null,
-    destino_id: null,
-    dataHora: new Date(),
-  },
-];
-
-const tiposSolicitacao = [
-  {
-    id: 1,
-    nome: 'Tipo1',
-  },
-  {
-    id: 2,
-    nome: 'Tipo2',
-  },
-  {
-    id: 3,
-    nome: 'Tipo3',
-  },
-  {
-    id: 4,
-    nome: 'Tipo4',
   },
 ];
 
@@ -117,7 +56,14 @@ class Solicitacao extends Component {
 
   render() {
 
-    const { visivel, onClose, onSave } = this.props;
+    const {
+      visivel,
+      onClose,
+      onSave,
+      municipios,
+      tiposSolicitacao,
+      companhias,
+    } = this.props;
 
     const { solicitacao } = this.state;
 
@@ -125,8 +71,8 @@ class Solicitacao extends Component {
     const nav = <Button icon onClick={onClose}>close</Button>;
 
     const action = [
-      <Button flat label="fechar" onClick={onClose}>close</Button>,
-      <Button flat label="salvar" onClick={() => onSave(solicitacao)} >save</Button>,
+      <Button flat label="cancelar" onClick={onClose}>close</Button>,
+      <Button flat label="salvar" onClick={() => onSave(solicitacao)}>check</Button>,
     ];
 
     return (
@@ -309,6 +255,9 @@ Solicitacao.propTypes = {
   visivel: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
+  municipios: PropTypes.array.isRequired,
+  tiposSolicitacao: PropTypes.array.isRequired,
+  companhias: PropTypes.array.isRequired,
   solicitacao: PropTypes.object,
 };
 

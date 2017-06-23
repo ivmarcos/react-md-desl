@@ -1,66 +1,30 @@
 import React, { Component } from 'react';
 import dateformat from 'lib/dateformat';
 import PropTypes from 'prop-types';
-import get from 'lodash/get';
 import DataTable from 'react-md/lib/DataTables/DataTable';
 import Avatar from 'react-md/lib/Avatars';
 import TableHeader from 'react-md/lib/DataTables/TableHeader';
 import TableRow from 'react-md/lib/DataTables/TableRow';
 import TableBody from 'react-md/lib/DataTables/TableBody';
 import TableColumn from 'react-md/lib/DataTables/TableColumn';
+import Card from 'react-md/lib/Cards/Card';
 import Button from 'react-md/lib/Buttons';
 import Menu from 'react-md/lib/Menus/Menu';
 import ListItem from 'react-md/lib/Lists/ListItem';
+
+import Currency from 'components/Currency';
+
+import { sort, getOffset } from 'lib/util/react';
 
 import { AVATAR_URL, PROFILE_URL } from 'lib/constants';
 
 import './TabelaDespacho.scss';
 
-function getOffset(element) {
-
-  let x = 0;
-  let y = 0;
-  let el = element;
-  while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
-
-    x += el.offsetLeft - el.scrollLeft;
-    y += el.offsetTop - el.scrollTop;
-    el = el.offsetParent;
-
-  }
-  return { top: y, left: x };
-
-}
-
-
-function sort(array, key, direction) {
-
-  const ajuste = direction ? 1 : -1;
-  const superior = 1 * ajuste;
-  const inferior = -1 * ajuste;
-
-  //eslint-disable-next-line
-  array.sort((a, b) => {
-
-    const valueA = get(a, key);
-    const valueB = get(b, key);
-
-    if (valueA === undefined) return inferior;
-    if (valueB === undefined) return inferior;
-
-    return valueA > valueB ? superior : inferior;
-
-  });
-
-  return array;
-
-}
-
 const defaultColumns = [
   {
     label: '#',
     key: 'id',
-    size: 25,
+    size: 10,
   },
   {
     label: 'Criado em',
@@ -68,13 +32,28 @@ const defaultColumns = [
     size: 10,
   },
   {
+    label: 'Data Missão',
+    key: 'dataHoraInicio',
+    size: 10,
+  },
+  {
     label: 'Funcionário',
     key: 'funcionario.nome',
+    size: 25,
+  },
+  {
+    label: 'Valor Estimado',
+    key: 'valorEstimado',
+    size: 10,
+  },
+  {
+    label: 'Status',
+    key: 'tipoStatus.nome',
     size: 10,
   },
   {
     label: '',
-    size: 5,
+    size: 2,
   },
 ];
 
@@ -88,7 +67,12 @@ const CANCELAMENTO = {
   label: 'Cancelar',
 };
 
-const ACOES = [DESPACHO, CANCELAMENTO];
+const VISUALIZAR = {
+  id: 1,
+  label: 'Visualizar',
+};
+
+const ACOES = [DESPACHO, CANCELAMENTO, VISUALIZAR];
 
 class TabelaDespacho extends Component {
 
@@ -136,13 +120,6 @@ class TabelaDespacho extends Component {
 
   }
 
-  setMenuRef = (el) => {
-
-    if (el) this.menu = el;
-
-  }
-
-
   handleSort(columnClicked) {
 
     const { columns, solicitacoes } = this.state;
@@ -177,7 +154,7 @@ class TabelaDespacho extends Component {
 
     const left = offset.left - 300;
 
-    const top = offset.top - 100;
+    const top = offset.top - 270;
 
     this.setState({
       listStyle: {
@@ -186,13 +163,6 @@ class TabelaDespacho extends Component {
       },
       exibirMenu: true,
     });
-
-  }
-
-  handleMenuClick = (acao) => {
-
-    console.log('acao', acao);
-    alert('stopped');
 
   }
 
@@ -211,6 +181,14 @@ class TabelaDespacho extends Component {
 
 
   }
+
+  handleMenuClick = (acao) => {
+
+    console.log('acao', acao);
+    alert('stopped');
+
+  }
+
 
   handleRowToggle = (row, toggled, count) => {
 
@@ -239,15 +217,111 @@ class TabelaDespacho extends Component {
 
     const { solicitacoes } = this.props;
 
-
     return (
 
       <div>
 
+
+        <Card>
+
+
+          <DataTable >
+
+            <TableHeader>
+              <TableRow >
+                {columns.map(column => (
+                  <TableColumn
+                    key={column.key}
+                    onClick={() => this.handleSort(column)}
+                    sorted={column.sorted}
+                  >
+                    {column.label}
+                  </TableColumn>
+            ))}
+              </TableRow>
+            </TableHeader>
+
+            <TableBody>
+
+              {solicitacoes.map((solicitacao) => {
+
+                const {
+                  id,
+                  dataHoraInclusao,
+                  funcionario,
+                  dataHoraInicio,
+                  tipoStatus,
+                  valorEstimado,
+                } = solicitacao;
+
+                return (
+                  <TableRow
+                    className="TabelaDespacho-linha"
+                  >
+
+                    <TableColumn>
+                      {id}
+                    </TableColumn>
+
+                    <TableColumn>
+                      {dateformat(dataHoraInclusao, 'mediumDate')}
+                    </TableColumn>
+
+                    <TableColumn>
+                      {dateformat(dataHoraInicio, 'mediumDate')}
+                    </TableColumn>
+
+                    <TableColumn>
+                      <div className="md-grid md-cell--middle">
+                        <Avatar
+                          iconSized
+                          key="avatar"
+                          src={`${AVATAR_URL}${funcionario.chave}`}
+                          href={`${PROFILE_URL}${funcionario.chave}`}
+                          className="TabelaDespacho-avatar"
+                        />
+                        <span
+                          className="md-cell--middle"
+                        >
+                          {funcionario.nomeExibicao || funcionario.nome}
+                        </span>
+                      </div>
+                    </TableColumn>
+
+                    <TableColumn>
+                      <Currency
+                        value={valorEstimado}
+                      />
+                    </TableColumn>
+
+                    <TableColumn>
+                      {tipoStatus.nome}
+                    </TableColumn>
+
+                    <TableColumn>
+                      <Button
+                        icon
+                        onClick={event => this.handleOpenMenu({ event, solicitacao })}
+                        className="TabelaDespacho-trigger-contextMenu"
+                        iconClassName="material-icons TabelaDespacho-trigger-contextMenu"
+                      >more_vert
+                      </Button>
+                    </TableColumn>
+
+
+                  </TableRow>
+                );
+
+              })}
+
+            </TableBody>
+          </DataTable>
+
+        </Card>
+
         <Menu
           isOpen={exibirMenu}
           listStyle={listStyle}
-          ref={this.setMenuRef}
           onClose={this.handleCloseMenu}
           position={Menu.Positions.CONTEXT}
         >
@@ -259,75 +333,6 @@ class TabelaDespacho extends Component {
           ))}
         </Menu>
 
-        <DataTable >
-
-          <TableHeader>
-            <TableRow >
-              {columns.map(column => (
-                <TableColumn
-                  key={column.key}
-                  onClick={() => this.handleSort(column)}
-                  sorted={column.sorted}
-                >
-                  {column.label}
-                </TableColumn>
-            ))}
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-
-            {solicitacoes.map((solicitacao) => {
-
-              const { id, dataHoraInclusao, funcionario } = solicitacao;
-
-              return (
-                <TableRow
-                  className="TabelaDespacho-linha"
-                >
-
-                  <TableColumn>
-                    {id}
-                  </TableColumn>
-
-                  <TableColumn>
-                    {dateformat(dataHoraInclusao, 'mediumDate')}
-                  </TableColumn>
-
-                  <TableColumn>
-                    <div className="md-grid md-cell--middle">
-                      <Avatar
-                        iconSized
-                        key="avatar"
-                        src={`${AVATAR_URL}${funcionario.chave}`}
-                        href={`${PROFILE_URL}${funcionario.chave}`}
-                        className="TabelaDespacho-avatar"
-                      />
-                      <span
-                        className="md-cell--middle"
-                      >
-                        {funcionario.nomeExibicao || funcionario.nome}
-                      </span>
-                    </div>
-                  </TableColumn>
-
-                  <TableColumn>
-                    <Button
-                      icon
-                      onClick={event => this.handleOpenMenu({ event, solicitacao })}
-                      className="TabelaDespacho-trigger-contextMenu"
-                      iconClassName="TabelaDespacho-trigger-contextMenu"
-                    >more_vert
-                      </Button>
-                  </TableColumn>
-
-                </TableRow>
-              );
-
-            })}
-
-          </TableBody>
-        </DataTable>
 
       </div>
 

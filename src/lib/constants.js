@@ -5,3 +5,4 @@ export const LOGOFF_URL = '/api/usuario/logoff?url=';
 
 export const RESTRICAO_PUBLICO = 1;
 export const RESTRICAO_PRIVADO = 2;
+

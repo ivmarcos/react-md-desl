@@ -1,7 +1,7 @@
 const sequelize = require('bb-common/sequelize');
 const Sequelize = require('sequelize');
 
-module.exports = sequelize.define('HistoricoStatusSolicitacaoDeslocamento', {
+module.exports = sequelize.define('HistoricoStatusSolicitacao', {
 
   id: {
     type: Sequelize.BIGINT,
@@ -12,7 +12,7 @@ module.exports = sequelize.define('HistoricoStatusSolicitacaoDeslocamento', {
   solicitacao_id: {
     type: Sequelize.BIGINT,
     associate: {
-      model: 'TipoStatusDeslocamento',
+      model: 'TipoStatus',
     },
   },
 

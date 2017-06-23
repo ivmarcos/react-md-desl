@@ -1,7 +1,7 @@
 const sequelize = require('bb-common/sequelize');
 const Sequelize = require('sequelize');
 
-const TipoStatus = sequelize.define('TipoStatusDeslocamento', {
+const TipoStatus = sequelize.define('TipoStatus', {
 
   id: {
     type: Sequelize.BIGINT,

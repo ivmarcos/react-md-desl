@@ -1,7 +1,7 @@
 const sequelize = require('bb-common/sequelize');
 const Sequelize = require('sequelize');
 
-module.exports = sequelize.define('SolicitacaoDeslocamento', {
+module.exports = sequelize.define('Solicitacao', {
 
   id: {
     type: Sequelize.BIGINT,
@@ -75,14 +75,14 @@ module.exports = sequelize.define('SolicitacaoDeslocamento', {
   tipo_id: {
     type: Sequelize.INTEGER,
     associate: {
-      model: 'TipoSolicitacaoDeslocamento',
+      model: 'TipoSolicitacao',
     },
   },
 
   tipoStatus_id: {
     type: Sequelize.INTEGER,
     associate: {
-      model: 'TipoStatusDeslocamento',
+      model: 'TipoStatus',
     },
   },
 
@@ -90,6 +90,9 @@ module.exports = sequelize.define('SolicitacaoDeslocamento', {
   {
     schema: 'deslocamento',
     tableName: 'solicitacao',
+    restify: {
+      restrict: ['post'],
+    },
   },
 );
 

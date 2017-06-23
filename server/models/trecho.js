@@ -1,7 +1,7 @@
 const sequelize = require('bb-common/sequelize');
 const Sequelize = require('sequelize');
 
-module.exports = sequelize.define('TrechoDeslocamento', {
+module.exports = sequelize.define('Trecho', {
 
   id: {
     type: Sequelize.BIGINT,
@@ -43,7 +43,7 @@ module.exports = sequelize.define('TrechoDeslocamento', {
   solicitacao_id: {
     type: Sequelize.BIGINT,
     associate: {
-      model: 'SolicitacaoDeslocamento',
+      model: 'Solicitacao',
     },
   },
 

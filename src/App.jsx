@@ -12,6 +12,7 @@ import { buscaUsuarioLogado, buscaAcessos } from 'store/app';
 import { buscaMunicipios } from 'store/municipio';
 import { buscaCompanhias } from 'store/companhia';
 import { buscaTiposSolicitacao } from 'store/tipoSolicitacao';
+import { buscaTiposStatus } from 'store/tipoStatus';
 
 import Nav from 'components/Nav';
 
@@ -31,6 +32,7 @@ class App extends Component {
       municipios,
       companhias,
       tiposSolicitacao,
+      tiposStatus,
     } = this.props;
 
     if (!usuario) {
@@ -60,6 +62,12 @@ class App extends Component {
     if (!tiposSolicitacao) {
 
       this.props.buscaTiposSolicitacao();
+
+    }
+
+    if (!tiposStatus) {
+
+      this.props.buscaTiposStatus();
 
     }
 
@@ -153,12 +161,16 @@ App.propTypes = {
   buscaCompanhias: PropTypes.func.isRequired,
   buscaMunicipios: PropTypes.func.isRequired,
   buscaTiposSolicitacao: PropTypes.func.isRequired,
+  buscaTiposStatus: PropTypes.func.isRequired,
   municipios: PropTypes.array.isRequired,
   companhias: PropTypes.array.isRequired,
   tiposSolicitacao: PropTypes.array.isRequired,
+  tiposStatus: PropTypes.array.isRequired,
   expirado: PropTypes.bool,
 };
 
-const mapStateToProps = ({ app: { usuario, mensagens, expirado, acessos }, municipio: { municipios }, companhia: { companhias }, tipoSolicitacao: { tipos } }) => ({ usuario, mensagens, expirado, acessos, municipios, companhias, tiposSolicitacao: tipos });
+const mapStateToProps =
+  ({ app: { usuario, mensagens, expirado, acessos }, municipio: { municipios }, companhia: { companhias }, tipoSolicitacao: { tiposSolicitacao }, tipoStatus: { tiposStatus } }) =>
+  ({ usuario, mensagens, expirado, acessos, municipios, companhias, tiposSolicitacao, tiposStatus });
 
-export default withRouter(connect(mapStateToProps, { buscaUsuarioLogado, buscaAcessos, buscaCompanhias, buscaMunicipios, buscaTiposSolicitacao })(App));
+export default withRouter(connect(mapStateToProps, { buscaUsuarioLogado, buscaAcessos, buscaCompanhias, buscaMunicipios, buscaTiposSolicitacao, buscaTiposStatus })(App));

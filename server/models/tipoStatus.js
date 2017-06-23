@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 const TipoStatus = sequelize.define('TipoStatus', {
 
   id: {
-    type: Sequelize.BIGINT,
+    type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
@@ -19,33 +19,28 @@ const TipoStatus = sequelize.define('TipoStatus', {
   {
     schema: 'deslocamento',
     tableName: 'tipo_status',
-  },
-);
+  });
 
 // tipos padrões
 const Tipos = [
   {
     id: 1,
-    nome: 'Rascunho',
-  },
-  {
-    id: 2,
     nome: 'Solicitado',
   },
   {
-    id: 3,
+    id: 2,
     nome: 'Despachado',
   },
   {
-    id: 4,
+    id: 3,
     nome: 'Rejeitado',
   },
   {
-    id: 5,
+    id: 4,
     nome: 'Aprovado',
   },
   {
-    id: 6,
+    id: 5,
     nome: 'Cancelado',
   },
 ];

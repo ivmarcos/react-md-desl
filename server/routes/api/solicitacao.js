@@ -1,6 +1,5 @@
 const sequelize = require('bb-common/sequelize');
 
-
 function salvaSolicitacao({ dados, usuario, transaction }) {
 
   const { Solicitacao } = sequelize.schemas.deslocamento;
@@ -12,6 +11,7 @@ function salvaSolicitacao({ dados, usuario, transaction }) {
   if (isNovaSolicitacao) {
 
     solicitacao.usuarioInclusao_id = usuario.id;
+    solicitacao.funcionario_id = solicitacao.funcionario_id || usuario.id;
 
   } else {
 
@@ -39,7 +39,7 @@ function salvaHistoricoStatus({ solicitacao, usuario, transaction }) {
 
   const solicitacaoAtual = solicitacao;
 
-  const { HistoricoStatus, Solicitacao } = sequelize.schemas.deslocamento;
+  const { HistoricoStatus, Solicitacao, TipoStatus } = sequelize.schemas.deslocamento;
 
   const isNovaSolicitacao = !solicitacaoAtual.id;
 
@@ -53,7 +53,7 @@ function salvaHistoricoStatus({ solicitacao, usuario, transaction }) {
 
       return HistoricoStatus.build({
         solicitacao_id: solicitacaoAtual.id,
-        tipoStatus_id: solicitacaoAtual.tipoStatus_id,
+        tipoStatus_id: solicitacaoAtual.tipoStatus_id || TipoStatus.SOLICITADO,
         usuarioInclusao_id: usuario.id,
         dataHoraInclusao: new Date(),
       }).save({ transaction });

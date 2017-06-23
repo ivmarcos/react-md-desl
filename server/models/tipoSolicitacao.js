@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 module.exports = sequelize.define('TipoSolicitacao', {
 
   id: {
-    type: Sequelize.BIGINT,
+    type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
@@ -19,6 +19,5 @@ module.exports = sequelize.define('TipoSolicitacao', {
   {
     schema: 'deslocamento',
     tableName: 'tipo_solicitacao',
-  },
-);
+  });
 

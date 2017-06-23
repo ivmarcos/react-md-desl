@@ -11,6 +11,15 @@ module.exports = sequelize.define('HistoricoStatusSolicitacao', {
 
   solicitacao_id: {
     type: Sequelize.BIGINT,
+    allowNull: false,
+    associate: {
+      model: 'Solicitacao',
+    },
+  },
+
+  tipoStatus_id: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
     associate: {
       model: 'TipoStatus',
     },
@@ -33,6 +42,5 @@ module.exports = sequelize.define('HistoricoStatusSolicitacao', {
   {
     schema: 'deslocamento',
     tableName: 'historico_status_solicitacao',
-  },
-);
+  });
 

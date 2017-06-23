@@ -53,6 +53,7 @@ const defaultColumns = [
   },
   {
     label: '',
+    key: 'action',
     size: 2,
   },
 ];
@@ -154,7 +155,7 @@ class TabelaDespacho extends Component {
 
     const left = offset.left - 300;
 
-    const top = offset.top - 270;
+    const top = offset.top - 300;
 
     this.setState({
       listStyle: {
@@ -225,7 +226,9 @@ class TabelaDespacho extends Component {
         <Card>
 
 
-          <DataTable >
+          <DataTable
+            baseId="tabelaDespacho"
+          >
 
             <TableHeader>
               <TableRow >
@@ -257,6 +260,7 @@ class TabelaDespacho extends Component {
                 return (
                   <TableRow
                     className="TabelaDespacho-linha"
+                    key={id}
                   >
 
                     <TableColumn>

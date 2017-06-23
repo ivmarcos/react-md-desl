@@ -181,7 +181,10 @@ class TabelaSolicitacoes extends Component {
 
         <Card>
 
-          <DataTable plain>
+          <DataTable
+            baseId="tabelaSolicitacoes"
+            plain
+          >
             <TableHeader>
               <TableRow>
                 {columns.map(column => (
@@ -212,6 +215,7 @@ class TabelaSolicitacoes extends Component {
 
                   <TableRow
                     className="TabelaSolicitacoes-linha"
+                    key={id}
                   >
 
                     <TableColumn>

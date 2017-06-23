@@ -1,5 +1,6 @@
 const sequelize = require('bb-common/sequelize');
 const Sequelize = require('sequelize');
+const TipoStatus = require('./tipoStatus');
 
 module.exports = sequelize.define('Solicitacao', {
 
@@ -9,8 +10,8 @@ module.exports = sequelize.define('Solicitacao', {
     autoIncrement: true,
   },
 
-  uor: {
-    type: Sequelize.BIGINT,
+  uor_id: {
+    type: Sequelize.INTEGER,
     allowNull: false,
     associate: {
       model: 'UOR',
@@ -82,8 +83,9 @@ module.exports = sequelize.define('Solicitacao', {
   tipoStatus_id: {
     type: Sequelize.INTEGER,
     associate: {
-      model: 'TipoStatus',
+      model: TipoStatus,
     },
+    defaultValue: TipoStatus.SOLICITADO,
   },
 
 },
@@ -93,6 +95,5 @@ module.exports = sequelize.define('Solicitacao', {
     restify: {
       restrict: ['post'],
     },
-  },
-);
+  });
 

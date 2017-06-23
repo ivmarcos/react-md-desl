@@ -9,7 +9,7 @@ module.exports = sequelize.define('Trecho', {
     autoIncrement: true,
   },
 
-  dataHora: {
+  dataHoraVoo: {
     type: Sequelize.DATE,
     allowNull: false,
   },
@@ -20,14 +20,14 @@ module.exports = sequelize.define('Trecho', {
   },
 
   origem_id: {
-    type: Sequelize.BIGINT,
+    type: Sequelize.INTEGER,
     associate: {
       model: 'Municipio',
     },
   },
 
   destino_id: {
-    type: Sequelize.BIGINT,
+    type: Sequelize.INTEGER,
     associate: {
       model: 'Municipio',
     },
@@ -51,6 +51,5 @@ module.exports = sequelize.define('Trecho', {
   {
     schema: 'deslocamento',
     tableName: 'trecho',
-  },
-);
+  });
 

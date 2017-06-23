@@ -20,16 +20,29 @@ class Solicitacoes extends Component {
     this.state = {
       detalhe: false,
       solicitacaoSelecionada: null,
+      filtro: {
+        tipoStatus_id: 1,
+        usuarioInclusao_id: props.usuario.id,
+      },
     };
 
     this.abreDetalhe = this.abreDetalhe.bind(this);
     this.fechaDetalhe = this.fechaDetalhe.bind(this);
+    this.handleChangeFiltro = this.handleChangeFiltro.bind(this);
 
   }
 
   componentWillMount() {
 
-    // this.props.buscaMinhasSolicitacoes();
+    this.filtra();
+
+  }
+
+  filtra() {
+
+    const { filtro } = this.state;
+
+    this.props.buscaMinhasSolicitacoes(filtro);
 
   }
 
@@ -49,14 +62,30 @@ class Solicitacoes extends Component {
 
   }
 
+
+  handleChangeFiltro({ tipo, value }) {
+
+    this.setState(prevState => ({
+      filtro: { ...prevState.filtro, [tipo]: value },
+    }),
+      this.filtra,
+    );
+
+  }
+
   render() {
 
-    const { detalhe, solicitacaoSelecionada } = this.state;
+    const {
+      detalhe,
+      solicitacaoSelecionada,
+      filtro,
+    } = this.state;
 
     const {
       solicitacoes,
       municipios,
       companhias,
+      tiposStatus,
       tiposSolicitacao,
     } = this.props;
 
@@ -69,10 +98,13 @@ class Solicitacoes extends Component {
         >
 
           <SelectButton
-            id="selectButtonNumbers"
-            placeholder="Number"
-
-            menuItems={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
+            id="filtroTipoStatus"
+            placeholder="tipoStatus"
+            itemLabel="nome"
+            itemValue="id"
+            onChange={value => this.handleChangeFiltro({ tipo: 'tipoStatus_id', value })}
+            value={filtro.tipoStatus_id}
+            menuItems={tiposStatus}
           />
 
           <Button
@@ -105,16 +137,17 @@ class Solicitacoes extends Component {
 
 
 const mapState = (
-  { app: { usuario }, solicitacao: { minhas }, municipio: { municipios }, companhia: { companhias }, tipoSolicitacao: { tipos } }) =>
-  ({ usuario, solicitacoes: minhas, companhias, tiposSolicitacao: tipos, municipios });
+  { app: { usuario }, solicitacao: { minhas }, municipio: { municipios }, companhia: { companhias }, tipoSolicitacao: { tiposSolicitacao }, tipoStatus: { tiposStatus } }) =>
+  ({ usuario, solicitacoes: minhas, companhias, tiposSolicitacao, tiposStatus, municipios });
 
 Solicitacoes.propTypes = {
-  // usuario: PropTypes.object.isRequired,
+  usuario: PropTypes.object.isRequired,
   solicitacoes: PropTypes.array.isRequired,
   municipios: PropTypes.array.isRequired,
   companhias: PropTypes.array.isRequired,
   tiposSolicitacao: PropTypes.array.isRequired,
-  //buscaMinhasSolicitacoes: PropTypes.func.isRequired,
+  tiposStatus: PropTypes.array.isRequired,
+  buscaMinhasSolicitacoes: PropTypes.func.isRequired,
 };
 
 export default connect(mapState, { buscaMinhasSolicitacoes })(Solicitacoes);

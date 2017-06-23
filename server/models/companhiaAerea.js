@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 module.exports = sequelize.define('CompanhiaAerea', {
 
   id: {
-    type: Sequelize.BIGINT,
+    type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
@@ -19,6 +19,4 @@ module.exports = sequelize.define('CompanhiaAerea', {
   {
     schema: 'deslocamento',
     tableName: 'companhia_aerea',
-  },
-);
-
+  });

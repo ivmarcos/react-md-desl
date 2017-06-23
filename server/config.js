@@ -16,8 +16,7 @@ module.exports = {
   maxAge: 1000 * 60 * 60 * 24 * 15,
 
   models: {
-    restify: true,
-    sync: false,
+    path: path.join(__dirname, 'models'),
   },
 
   injectState: ({ req }) => ({

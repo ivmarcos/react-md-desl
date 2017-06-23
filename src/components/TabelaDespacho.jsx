@@ -8,12 +8,29 @@ import TableHeader from 'react-md/lib/DataTables/TableHeader';
 import TableRow from 'react-md/lib/DataTables/TableRow';
 import TableBody from 'react-md/lib/DataTables/TableBody';
 import TableColumn from 'react-md/lib/DataTables/TableColumn';
+import Button from 'react-md/lib/Buttons';
 import Menu from 'react-md/lib/Menus/Menu';
 import ListItem from 'react-md/lib/Lists/ListItem';
 
 import { AVATAR_URL, PROFILE_URL } from 'lib/constants';
 
 import './TabelaDespacho.scss';
+
+function getOffset(element) {
+
+  let x = 0;
+  let y = 0;
+  let el = element;
+  while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+
+    x += el.offsetLeft - el.scrollLeft;
+    y += el.offsetTop - el.scrollTop;
+    el = el.offsetParent;
+
+  }
+  return { top: y, left: x };
+
+}
 
 
 function sort(array, key, direction) {
@@ -55,6 +72,10 @@ const defaultColumns = [
     key: 'funcionario.nome',
     size: 10,
   },
+  {
+    label: '',
+    size: 5,
+  },
 ];
 
 
@@ -66,6 +87,7 @@ class TabelaSolicitacoes extends Component {
 
     this.state = {
       columns: defaultColumns,
+      exibirMenu: false,
       listStyle: {
         top: 0,
         left: 0,
@@ -73,9 +95,11 @@ class TabelaSolicitacoes extends Component {
     };
 
     this.handleSort = this.handleSort.bind(this);
-    this.handleContextMenu = this.handleContextMenu.bind(this);
+    this.handleOpenMenu = this.handleOpenMenu.bind(this);
+    this.handleCloseMenu = this.handleCloseMenu.bind(this);
 
   }
+
 
   componentWillMount() {
 
@@ -96,6 +120,12 @@ class TabelaSolicitacoes extends Component {
       });
 
     }
+
+  }
+
+  setMenuRef = (el) => {
+
+    if (el) this.menu = el;
 
   }
 
@@ -124,28 +154,54 @@ class TabelaSolicitacoes extends Component {
 
   }
 
-  handleContextMenu({ event, solicitacao }) {
+  handleOpenMenu({ event }) {
 
-    console.log('event,', event, solicitacao);
+    const element = event.target;
 
-    console.log('event.offsetx', event.clientX);
+    const offset = getOffset(element);
 
-    const left = event.clientX;
+    console.log('offset', offset);
 
-    const top = event.clientX + event.target.offsetTop;
+    const left = offset.left - 300;
+
+    const top = offset.top - 100;
 
     this.setState({
       listStyle: {
         top,
         left,
       },
+      exibirMenu: true,
     });
 
   }
 
+  handleMenuClick = () => {
+
+    alert('stopped');
+
+  }
+
+  handleCloseMenu(e) {
+
+    const isContextMenuClicked = !!e.persist;
+    const isOutsideClicked = !(e.target && e.target.className.indexOf('TabelaDespacho-trigger-contextMenu') > -1);
+
+    if (isContextMenuClicked || isOutsideClicked) {
+
+      this.setState({
+        exibirMenu: false,
+      });
+
+    }
+
+
+  }
+
+
   render() {
 
-    const { columns, listStyle } = this.state;
+    const { columns, listStyle, exibirMenu } = this.state;
 
     const { solicitacoes } = this.props;
 
@@ -155,13 +211,15 @@ class TabelaSolicitacoes extends Component {
       <div>
 
         <Menu
-          isOpen
+          isOpen={exibirMenu}
           listStyle={listStyle}
+          ref={this.setMenuRef}
+          onClose={this.handleCloseMenu}
           position={Menu.Positions.CONTEXT}
         >
-          <ListItem disabled primaryText="Redo" />
-          <ListItem disabled primaryText="Cut" />
-          <ListItem disabled primaryText="Paste" />
+          <ListItem primaryText="Redo" onClick={this.handleMenuClick} />
+          <ListItem disabled primaryText="Cut" onClick={this.handleMenuClick} />
+          <ListItem disabled primaryText="Paste" onClick={this.handleMenuClick} />
         </Menu>
 
         <DataTable plain>
@@ -172,7 +230,6 @@ class TabelaSolicitacoes extends Component {
                 <TableColumn
                   key={column.key}
                   onClick={() => this.handleSort(column)}
-
                   sorted={column.sorted}
                 >
                   {column.label}
@@ -190,7 +247,6 @@ class TabelaSolicitacoes extends Component {
               return (
                 <TableRow
                   className="TabelaDespacho-linha"
-                  onContextMenu={event => this.handleContextMenu({ event, solicitacao })}
                 >
 
                   <TableColumn>
@@ -216,6 +272,16 @@ class TabelaSolicitacoes extends Component {
                         {funcionario.nomeExibicao || funcionario.nome}
                       </span>
                     </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <Button
+                      icon
+                      onClick={event => this.handleOpenMenu({ event, solicitacao })}
+                      className="TabelaDespacho-trigger-contextMenu"
+                      iconClassName="TabelaDespacho-trigger-contextMenu"
+                    >more_vert
+                      </Button>
                   </TableColumn>
 
                 </TableRow>

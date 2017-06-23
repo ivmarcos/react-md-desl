@@ -1,7 +1,7 @@
 import { api } from 'lib/api';
 import createAction from 'lib/createAction';
 
-const BUSCA_USUARIO = 'BUSCA_USUARIO';
+// const BUSCA_USUARIO = 'BUSCA_USUARIO';
 const BUSCA_USUARIO_SUCCESS = 'BUSCA_USUARIO_SUCCESS';
 
 const BUSCA_ACESSOS = 'BUSCA_ACESSOS';
@@ -9,7 +9,15 @@ const BUSCA_ACESSOS_SUCCESS = 'BUSCA_ACESSOS_SUCCESS';
 
 const ENVIA_MENSAGEM = 'ENVIA_MENSAGEM';
 
-export const buscaUsuarioLogado = () => createAction(BUSCA_USUARIO, api.get('/usuario/logado'));
+// export const buscaUsuarioLogado = () => createAction(BUSCA_USUARIO, api.get('/usuario/logado'));
+
+export const buscaUsuarioLogado = () => dispatch => dispatch({
+  type: BUSCA_USUARIO_SUCCESS,
+  payload: {
+    id: 56805293,
+    nome: 'Marcos Andrei',
+  },
+});
 
 export const buscaAcessos = () => createAction(BUSCA_ACESSOS, api.get('/usuario/acessos'));
 

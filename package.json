@@ -7,7 +7,6 @@
     "@storybook/addon-actions": "^3.0.1",
     "app-module-path": "^2.2.0",
     "axios": "^0.16.1",
-    "bb-common": "ssh://disem7.intranet.bb.com.br:29418/bb-common.git",
     "chart.js": "^2.5.0",
     "dateformat": "^2.0.0",
     "highlights": "^3.0.1",

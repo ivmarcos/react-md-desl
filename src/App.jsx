@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route, withRouter, Switch } from 'react-router-dom';
@@ -32,7 +33,7 @@ class App extends Component {
 
     if (!acessos.length) {
 
-      this.props.buscaAcessos();
+      //this.props.buscaAcessos();
 
     }
 

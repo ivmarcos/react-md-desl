@@ -21,6 +21,7 @@ module.exports = sequelize.define('Trecho', {
 
   origem_id: {
     type: Sequelize.INTEGER,
+    allowNull: false,
     associate: {
       model: 'Municipio',
     },
@@ -28,6 +29,7 @@ module.exports = sequelize.define('Trecho', {
 
   destino_id: {
     type: Sequelize.INTEGER,
+    allowNull: false,
     associate: {
       model: 'Municipio',
     },
@@ -35,6 +37,7 @@ module.exports = sequelize.define('Trecho', {
 
   companhia_id: {
     type: Sequelize.INTEGER,
+    allowNull: false,
     associate: {
       model: 'CompanhiaAerea',
     },
@@ -42,6 +45,7 @@ module.exports = sequelize.define('Trecho', {
 
   solicitacao_id: {
     type: Sequelize.BIGINT,
+    allowNull: false,
     associate: {
       model: 'Solicitacao',
     },

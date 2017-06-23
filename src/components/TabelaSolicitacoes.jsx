@@ -13,6 +13,7 @@ import Currency from 'components/Currency';
 import ListItem from 'react-md/lib/Lists/ListItem';
 
 import { sort, getOffset } from 'lib/util/react';
+import { TIPOS } from 'store/tipoStatus';
 
 import './TabelaSolicitacoes.scss';
 
@@ -53,20 +54,6 @@ const defaultColumns = [
     size: 2,
   },
 ];
-
-
-const CANCELAMENTO = {
-  id: 1,
-  label: 'Cancelar',
-};
-
-const VISUALIZAR = {
-  id: 1,
-  label: 'Visualizar',
-};
-
-const ACOES = [CANCELAMENTO, VISUALIZAR];
-
 
 class TabelaSolicitacoes extends Component {
 
@@ -132,7 +119,9 @@ class TabelaSolicitacoes extends Component {
 
   }
 
-  handleOpenMenu({ event }) {
+  handleOpenMenu({ event, solicitacao }) {
+
+    console.log('openingmenu', solicitacao);
 
     const element = event.target;
 
@@ -150,6 +139,7 @@ class TabelaSolicitacoes extends Component {
         left,
       },
       exibirMenu: true,
+      solicitacaoSelecionada: solicitacao,
     });
 
   }
@@ -172,8 +162,17 @@ class TabelaSolicitacoes extends Component {
 
   render() {
 
-    const { columns, exibirMenu, listStyle } = this.state;
-    const { solicitacoes } = this.props;
+    const {
+      columns,
+      exibirMenu,
+      listStyle,
+      solicitacaoSelecionada,
+    } = this.state;
+
+    const {
+      solicitacoes,
+      onVisualizaSolicitacao,
+    } = this.props;
 
     return (
 
@@ -272,12 +271,15 @@ class TabelaSolicitacoes extends Component {
           onClose={this.handleCloseMenu}
           position={Menu.Positions.CONTEXT}
         >
-          {ACOES.map(acao => (
-            <ListItem
-              primaryText={acao.label}
-              onClick={() => this.handleMenuClick(acao)}
-            />
-          ))}
+          <ListItem
+            primaryText="Visualizar"
+            onClick={() => onVisualizaSolicitacao({ solicitacaoSelecionada })}
+          />
+          <ListItem
+            primaryText="Cancelar"
+            disabled={!solicitacaoSelecionada || [TIPOS.CANCELADA, TIPOS.DESPACHADA, TIPOS.APROVADA].indexOf(solicitacaoSelecionada.tipoStatus_id) > -1}
+            onClick={() => onVisualizaSolicitacao({ solicitacaoSelecionada })}
+          />
         </Menu>
 
       </div>
@@ -289,6 +291,7 @@ class TabelaSolicitacoes extends Component {
 
 TabelaSolicitacoes.propTypes = {
   solicitacoes: PropTypes.array.isRequired,
+  onVisualizaSolicitacao: PropTypes.func.isRequired,
 };
 
 export default TabelaSolicitacoes;

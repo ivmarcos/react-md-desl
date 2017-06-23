@@ -6,9 +6,11 @@ import TabelaSolicitacoes from 'components/TabelaSolicitacoes';
 import SelectButton from 'components/SelectButton';
 import Solicitacao from 'components/Solicitacao';
 
-import { buscaMinhasSolicitacoes } from 'store/solicitacao';
+import { buscaMinhasSolicitacoes, novaSolicitacao } from 'store/solicitacao';
+import { TIPOS } from 'store/tipoStatus';
 
 import './Solicitacoes.scss';
+
 
 class Solicitacoes extends Component {
 
@@ -18,17 +20,18 @@ class Solicitacoes extends Component {
     super(props);
 
     this.state = {
-      detalhe: false,
-      solicitacaoSelecionada: null,
+      exibirSolicitacao: false,
+      solicitacao: null,
       filtro: {
-        tipoStatus_id: 1,
+        tipoStatus_id: TIPOS.SOLICITADO,
         usuarioInclusao_id: props.usuario.id,
       },
     };
 
-    this.abreDetalhe = this.abreDetalhe.bind(this);
-    this.fechaDetalhe = this.fechaDetalhe.bind(this);
+    this.handleNovaSolicitacao = this.handleNovaSolicitacao.bind(this);
+    this.handleCloseSolicitacao = this.handleCloseSolicitacao.bind(this);
     this.handleChangeFiltro = this.handleChangeFiltro.bind(this);
+    this.handleVisualizaSolicitacao = this.handleVisualizaSolicitacao.bind(this);
 
   }
 
@@ -46,18 +49,31 @@ class Solicitacoes extends Component {
 
   }
 
-  abreDetalhe() {
+  handleNovaSolicitacao() {
+
+    const { usuario } = this.props;
 
     this.setState({
-      detalhe: true,
+      exibirSolicitacao: true,
+      solicitacaoSelecionada: novaSolicitacao({ usuario }),
     });
 
   }
 
-  fechaDetalhe() {
+  handleCloseSolicitacao() {
 
     this.setState({
-      detalhe: false,
+      exibirSolicitacao: false,
+    });
+
+  }
+
+  handleVisualizaSolicitacao({ solicitacaoSelecionada }) {
+
+
+    this.setState({
+      solicitacaoSelecionada,
+      exibirSolicitacao: true,
     });
 
   }
@@ -76,7 +92,7 @@ class Solicitacoes extends Component {
   render() {
 
     const {
-      detalhe,
+      exibirSolicitacao,
       solicitacaoSelecionada,
       filtro,
     } = this.state;
@@ -110,22 +126,24 @@ class Solicitacoes extends Component {
           <Button
             raised
             label="Nova solicitação"
-            onClick={this.abreDetalhe}
+            onClick={this.handleNovaSolicitacao}
           />
 
         </div>
 
         <TabelaSolicitacoes
           solicitacoes={solicitacoes}
+          onVisualizaSolicitacao={this.handleVisualizaSolicitacao}
         />
 
         <Solicitacao
-          visivel={detalhe}
+          visivel={exibirSolicitacao}
           solicitacao={solicitacaoSelecionada}
           municipios={municipios}
           companhias={companhias}
+          tiposStatus={tiposStatus}
           tiposSolicitacao={tiposSolicitacao}
-          onClose={this.fechaDetalhe}
+          onClose={this.handleCloseSolicitacao}
         />
 
       </div>

@@ -75,6 +75,7 @@ module.exports = sequelize.define('Solicitacao', {
 
   tipo_id: {
     type: Sequelize.INTEGER,
+    allowNull: false,
     associate: {
       model: 'TipoSolicitacao',
     },
@@ -82,6 +83,7 @@ module.exports = sequelize.define('Solicitacao', {
 
   tipoStatus_id: {
     type: Sequelize.INTEGER,
+    allowNull: false,
     associate: {
       model: TipoStatus,
     },

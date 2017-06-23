@@ -4,9 +4,7 @@ import createAction from 'lib/createAction';
 const BUSCA_TIPOS_SOLICITACAO = 'BUSCA_TIPOS_SOLICITACAO';
 const BUSCA_TIPOS_SOLICITACAO_SUCCESS = 'BUSCA_TIPOS_SOLICITACAO_SUCCESS';
 
-const CACHE = 0;// 1000 * 60 * 60 * 24 * 5;
-
-export const buscaTiposSolicitacao = () => createAction(BUSCA_TIPOS_SOLICITACAO, api.get(`/tipoSolicitacao?cache=${CACHE}`));
+export const buscaTiposSolicitacao = () => createAction(BUSCA_TIPOS_SOLICITACAO, api.get('/tipoSolicitacao'));
 
 const tiposSolicitacao = [
   {

@@ -7,10 +7,25 @@ const BUSCA_MINHAS_SOLICITACOES_SUCCESS = 'BUSCA_MINHAS_SOLICITACOES_SUCCESS';
 const BUSCA_SOLICITACOES_VALIDACAO = 'BUSCA_SOLICITACOES_VALIDACAO';
 const BUSCA_SOLICITACOES_VALIDACAO_SUCCESS = 'BUSCA_SOLICITACOES_VALIDACAO_SUCCESS';
 
-export const buscaMinhasSolicitacoes = params => createAction(BUSCA_MINHAS_SOLICITACOES, api.get('/solicitacao', { params }));
+export const buscaMinhasSolicitacoes = params => createAction(BUSCA_MINHAS_SOLICITACOES, api.get('/solicitacao', { params: { ...params, include: ['funcionario', 'usuarioInclusao', 'tipoStatus', 'trechos'] } }));
 
-export const buscaSolicitacoesValidacao = params => createAction(BUSCA_SOLICITACOES_VALIDACAO, api.get('/solicitacao', { params }));
+export const buscaSolicitacoesValidacao = params => createAction(BUSCA_SOLICITACOES_VALIDACAO, api.get('/solicitacao', { params: { ...params, include: ['funcionario', 'usuarioInclusao', 'tipoStatus', 'trechos'] } }));
 
+export function novaSolicitacao({ usuario }) {
+
+  return {
+    funcionario_id: usuario,
+    trechos: [
+      {
+        id: null,
+      },
+      {
+        id: null,
+      },
+    ],
+  };
+
+}
 
 const solicitacoes = [
   {

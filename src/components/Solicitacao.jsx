@@ -30,7 +30,6 @@ class Solicitacao extends Component {
 
     this.state = {
       opcao: false,
-      solicitacao: {},
     };
 
   }
@@ -91,9 +90,9 @@ class Solicitacao extends Component {
       companhias,
     } = this.props;
 
-    const steps = tiposStatus.map(tipo => ({ title: tipo.nome }));
-
     if (!solicitacao) return null;
+
+    const steps = tiposStatus.length ? tiposStatus.map(tipo => ({ title: tipo.nome })) : [];
 
     return (
 
@@ -287,7 +286,7 @@ class Solicitacao extends Component {
     const nav = <Button icon onClick={onClose}>close</Button>;
 
     const action = [
-      <Button flat label="cancelar" onClick={onClose}>close</Button>,
+      <Button flat label="fechar" onClick={onClose}>close</Button>,
       <Button flat label="salvar" onClick={() => onSave(solicitacao)}>check</Button>,
     ];
 
@@ -303,7 +302,7 @@ class Solicitacao extends Component {
           colored
           nav={nav}
           actions={action}
-          title="Nova solicitação"
+          title={solicitacao && solicitacao.id ? `Solicitação #${solicitacao.id}` : 'Nova solicitação'}
           fixed
         />
 

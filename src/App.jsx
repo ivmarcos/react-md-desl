@@ -59,13 +59,13 @@ class App extends Component {
 
     }
 
-    if (!tiposSolicitacao) {
+    if (!tiposSolicitacao.length) {
 
       this.props.buscaTiposSolicitacao();
 
     }
 
-    if (!tiposStatus) {
+    if (!tiposStatus.length) {
 
       this.props.buscaTiposStatus();
 
@@ -116,11 +116,11 @@ class App extends Component {
         <section className="app-secao">
 
           <ReactCSSTransitionGroup
-            // transitionName="md-cross-fade"
-            transitionEnter={false}
+            transitionName="md-cross-fade"
+            // transitionEnter={false}
             transitionLeave={false}
             transitionEnterTimeout={250}
-            // transitionLeaveTimeout={10}
+            transitionLeaveTimeout={10}
           >
 
             <Switch key={location.key}>

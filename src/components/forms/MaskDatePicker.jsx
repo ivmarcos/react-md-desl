@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
-import CustomInput from './CustomInput';
+import CustomInput from './MaskInput';
 import moment from 'moment';
 
 class MaskDatePicker extends Component {
 
   state = {
-    selected: moment(),
+    selected: null,
   }
 
 
@@ -22,6 +22,7 @@ class MaskDatePicker extends Component {
 
     return (
       <DatePicker
+        allowSameDay
         customInput={<CustomInput
           mask="99/99/9999 99:99"
           maskChar=" "
@@ -32,6 +33,7 @@ class MaskDatePicker extends Component {
         className="md-text-field md-text md-text-field--inline-indicator md-full-width md-text-field--floating-margin"
         dateFormat="DD/MM/YYYY HH:mm"
         onChange={this.handleChange}
+        onKeyDown={e => console.log('e', e)}
       />
 
     );

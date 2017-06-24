@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import InputMask from 'react-input-mask';
 
-const CONTAINER_CLASS = 'md-text-field-container md-full-width md-text-field-container--input md-cell md-cell--bottom';
+const CONTAINER_CLASS = 'md-text-field-container md-full-width md-text-field-container--input';
 const HR_CLASS = 'md-divider md-divider--text-field md-divider--expand-from-left';
 const HR_CLASS_FOCUS = 'md-divider md-divider--text-field md-divider--expand-from-left md-divider--text-field-expanded md-divider--text-field-active';
 const LABEL_CLASS_FOCUS = 'md-floating-label md-floating-label--floating md-floating-label--active md-floating-label--floating';

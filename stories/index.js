@@ -6,6 +6,7 @@ import Input from '../src/components/forms/Input';
 import MaskInput from '../src/components/forms/MaskInput';
 import CustomInput from '../src/components/forms/CustomInput';
 import MaskDatePicker from '../src/components/forms/MaskDatePicker';
+import Autocomplete from '../src/components/forms/Autocomplete';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
@@ -45,61 +46,16 @@ storiesOf('DatePicker', module)
     />}
     className="md-text-field md-text md-text-field--inline-indicator md-full-width md-text-field--floating-margin"
     dateFormat="DD/MM/YYYY HH:mm"
+    onEnterKeyDown={e => console.log('enter')}
   />
 ))
+
 .add('React Date Picker With Mask Input', () => (
   <MaskDatePicker />
 ));
 
-storiesOf('Compartilhamento', module)
-  .add('Básico', () => {
 
-    const tiposCompartilhamento = [
-      {
-        id: 1,
-        nome: 'Administrador',
-      },
-      {
-        id: 2,
-        nome: 'Consulta',
-      },
-    ];
-
-
-    const itensTeste = [
-      {
-        id: 1,
-        nome: 'teste',
-        tipo_id: 1,
-      },
-      {
-        id: 2,
-        nome: 'teste2',
-        tipo_id: 1,
-      },
-      {
-        id: 3,
-        nome: 'teste3',
-        tipo_id: 1,
-      },
-
-    ];
-
-    const itensAutoComplete = itensTeste;
-
-
-    return (
-      <Compartilhamento
-        itensAutoComplete={itensAutoComplete}
-        itens={itensTeste}
-        onAdicionaItem={item => alert(`item adicionado${item.id}`)}
-        onAtualizaItem={({ item, tipo_id }) => alert(`item atualizado ${item.id}, tipo${tipo_id}`)}
-        onRemoveItens={itensRemovidos => alert(`itens removidos${itensRemovidos.length}`)}
-        onChangeAutoComplete={value => console.log(`change-autocomplete: ${value}`)}
-        placeholderAutoComplete="Compartilhar com..."
-        tiposCompartilhamento={tiposCompartilhamento}
-      />
-    );
-
-
-  });
+storiesOf('Autocomplete', module)
+.add('Básico', () => (
+  <Autocomplete />
+));

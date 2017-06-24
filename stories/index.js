@@ -2,8 +2,13 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import Compartilhamento from '../src/components/Compartilhamento';
+import VirtualSelect from '../src/components/forms/VirtualSelect';
+
 
 import '../src/App.scss';
+
+storiesOf('Virtual Select', module)
+.add('Básico', () => <VirtualSelect />);
 
 storiesOf('Compartilhamento', module)
   .add('Básico', () => {

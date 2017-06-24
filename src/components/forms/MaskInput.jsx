@@ -57,19 +57,23 @@ class MaskInput extends PureComponent {
 
     const { focus, hasValue } = this.state;
 
+
     const {
       id,
       onFocus,
       onBlur,
       label,
+      value,
       ...props
     } = this.props;
+
+    console.log('value', value);
 
     return (
       <div className={CONTAINER_CLASS}>
         <label
           htmlFor={id}
-          className={focus ? LABEL_CLASS_FOCUS : (hasValue ? LABEL_CLASS_HAS_VALUE : LABEL_CLASS)}
+          className={focus ? LABEL_CLASS_FOCUS : (hasValue || value ? LABEL_CLASS_HAS_VALUE : LABEL_CLASS)}
         >{label}
         </label>
         <InputMask
@@ -77,6 +81,7 @@ class MaskInput extends PureComponent {
           className={INPUT_CLASS}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
+          value={value}
           {...props}
         />
         <hr

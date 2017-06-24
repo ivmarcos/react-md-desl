@@ -94,7 +94,7 @@ module.exports = {
   module: {
     // First, run the linter.
     // It's important to do this before Babel processes the JS.
-    preLoaders: [
+    /*preLoaders: [
       {
         test: /\.(js|jsx)$/,
         loader: 'eslint',
@@ -103,7 +103,7 @@ module.exports = {
           quiet: true,
         },
       },
-    ],
+    ],*/
     loaders: [
       // ** ADDING/UPDATING LOADERS **
       // The "url" loader handles all assets unless explicitly excluded.

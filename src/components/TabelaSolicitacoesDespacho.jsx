@@ -2,63 +2,75 @@ import React, { Component } from 'react';
 import dateformat from 'lib/dateformat';
 import PropTypes from 'prop-types';
 import DataTable from 'react-md/lib/DataTables/DataTable';
-import Avatar from 'react-md/lib/Avatars';
 import TableHeader from 'react-md/lib/DataTables/TableHeader';
 import TableRow from 'react-md/lib/DataTables/TableRow';
 import TableBody from 'react-md/lib/DataTables/TableBody';
-import TableColumn from 'react-md/lib/DataTables/TableColumn';
-import Card from 'react-md/lib/Cards/Card';
 import Button from 'react-md/lib/Buttons';
+import Card from 'react-md/lib/Cards/Card';
+import TableColumn from 'react-md/lib/DataTables/TableColumn';
 import Menu from 'react-md/lib/Menus/Menu';
+import Currency from 'components/Currency';
 import ListItem from 'react-md/lib/Lists/ListItem';
 
-import Currency from 'components/Currency';
-
 import { sort, getOffset } from 'lib/util/react';
+import { TIPOS } from 'store/tipoStatus';
 
-import { AVATAR_URL, PROFILE_URL } from 'lib/constants';
+import './TabelaSolicitacoes.scss';
 
-import './TabelaDespacho.scss';
 
 const defaultColumns = [
   {
     label: '#',
     key: 'id',
-    size: 10,
+    size: 25,
   },
   {
-    label: 'Em',
+    label: 'Criado em',
     key: 'dataHoraInclusao',
     size: 10,
   },
   {
-    label: 'Por ',
-    key: 'usuarioInclusao.nome',
-    size: 25,
+    label: 'Início em',
+    key: 'dataHoraInicio',
+    size: 10,
+  },
+  {
+    label: 'Término em',
+    key: 'dataHoraTermino',
+    size: 10,
+  },
+  {
+    label: 'Valor estimado',
+    key: 'valorEstimado',
+    size: 10,
+  },
+  {
+    label: 'Status',
+    key: 'tipoStatus.nome',
+    size: 10,
   },
   {
     label: '',
-    key: 'action',
     size: 2,
   },
 ];
 
-
-class TabelaDespacho extends Component {
+class TabelaSolicitacoes extends Component {
 
   constructor(props) {
 
     super(props);
 
+    const { solicitacoes } = props;
+
     this.state = {
       columns: defaultColumns,
-      exibirMenu: false,
       listStyle: {
         top: 0,
         left: 0,
       },
-      selectedRows: [],
-      count: 0,
+      solicitacoes,
+      exibirMenu: false,
     };
 
     this.handleSort = this.handleSort.bind(this);
@@ -67,16 +79,6 @@ class TabelaDespacho extends Component {
 
   }
 
-
-  componentWillMount() {
-
-    const { solicitacoes } = this.props;
-
-    this.setState({
-      solicitacoes,
-    });
-
-  }
 
   componentWillReceiveProps(nextProps) {
 
@@ -90,7 +92,10 @@ class TabelaDespacho extends Component {
 
   }
 
-  handleSort(columnClicked) {
+
+  handleSort = (columnClicked) => {
+
+    console.log('column clicked', columnClicked);
 
     const { columns, solicitacoes } = this.state;
     const column = columnClicked;
@@ -114,7 +119,9 @@ class TabelaDespacho extends Component {
 
   }
 
-  handleOpenMenu({ event }) {
+  handleOpenMenu({ event, solicitacao }) {
+
+    console.log('openingmenu', solicitacao);
 
     const element = event.target;
 
@@ -132,6 +139,7 @@ class TabelaDespacho extends Component {
         left,
       },
       exibirMenu: true,
+      solicitacaoSelecionada: solicitacao,
     });
 
   }
@@ -152,56 +160,32 @@ class TabelaDespacho extends Component {
 
   }
 
-  handleMenuClick = (acao) => {
-
-    console.log('acao', acao);
-    alert('stopped');
-
-  }
-
-
-  handleRowToggle = (row, toggled, count) => {
-
-    const { solicitacoes } = this.props;
-
-    let selectedRows = [];
-
-    if (row === -1) {
-
-      selectedRows = solicitacoes.map(() => toggled);
-
-    } else {
-
-      selectedRows[row] = toggled;
-
-    }
-
-    this.setState({ count, selectedRows });
-
-  };
-
-
   render() {
 
-    const { columns, listStyle, exibirMenu } = this.state;
+    const {
+      columns,
+      exibirMenu,
+      listStyle,
+      solicitacaoSelecionada,
+    } = this.state;
 
-    const { solicitacoes } = this.props;
+    const {
+      solicitacoes,
+      onVisualizaSolicitacao,
+    } = this.props;
 
     return (
 
       <div>
 
-
         <Card>
 
-
           <DataTable
-            baseId="TabelaDespacho"
+            baseId="tabelaSolicitacoes"
             plain
           >
-
             <TableHeader>
-              <TableRow >
+              <TableRow>
                 {columns.map(column => (
                   <TableColumn
                     key={column.key}
@@ -213,20 +197,23 @@ class TabelaDespacho extends Component {
             ))}
               </TableRow>
             </TableHeader>
-
             <TableBody>
 
-              {despachos.map((despacho) => {
+              {solicitacoes.map((solicitacao) => {
 
                 const {
                   id,
                   dataHoraInclusao,
-                  usuarioInclusao,
-                } = solicitacao;
+                  dataHoraInicio,
+                  dataHoraTermino,
+                  valorEstimado,
+                  tipoStatus,
+                  } = solicitacao;
 
                 return (
+
                   <TableRow
-                    className="TabelaDespacho-linha"
+                    className="TabelaSolicitacoes-linha"
                     key={id}
                   >
 
@@ -239,20 +226,21 @@ class TabelaDespacho extends Component {
                     </TableColumn>
 
                     <TableColumn>
-                      <div className="md-grid md-cell--middle">
-                        <Avatar
-                          iconSized
-                          key="avatar"
-                          src={`${AVATAR_URL}${usuarioInclusao.chave}`}
-                          href={`${PROFILE_URL}${usuarioInclusao.chave}`}
-                          className="TabelaDespacho-avatar"
-                        />
-                        <span
-                          className="md-cell--middle"
-                        >
-                          {usuarioInclusao.nomeExibicao || usuarioInclusao.nome}
-                        </span>
-                      </div>
+                      {dateformat(dataHoraInicio, 'mediumDate')}
+                    </TableColumn>
+
+                    <TableColumn>
+                      {dateformat(dataHoraTermino, 'mediumDate')}
+                    </TableColumn>
+
+                    <TableColumn>
+                      <Currency
+                        value={valorEstimado}
+                      />
+                    </TableColumn>
+
+                    <TableColumn>
+                      {tipoStatus.nome}
                     </TableColumn>
 
                     <TableColumn>
@@ -262,15 +250,16 @@ class TabelaDespacho extends Component {
                         className="TabelaDespacho-trigger-contextMenu"
                         iconClassName="material-icons TabelaDespacho-trigger-contextMenu"
                       >more_vert
-                      </Button>
+                        </Button>
                     </TableColumn>
 
 
                   </TableRow>
+
+
                 );
 
               })}
-
             </TableBody>
           </DataTable>
 
@@ -283,15 +272,15 @@ class TabelaDespacho extends Component {
           position={Menu.Positions.CONTEXT}
         >
           <ListItem
-              primaryText="Aprovar"
-              onClick={() => this.handleMenuClick(acao)}
-            />
+            primaryText="Visualizar"
+            onClick={() => onVisualizaSolicitacao({ solicitacaoSelecionada })}
+          />
           <ListItem
-              primaryText="Rejeitar"
-              onClick={() => this.handleMenuClick(acao)}
-            />
+            primaryText="Cancelar"
+            disabled={!solicitacaoSelecionada || [TIPOS.CANCELADA, TIPOS.DESPACHADA, TIPOS.APROVADA].indexOf(solicitacaoSelecionada.tipoStatus_id) > -1}
+            onClick={() => onVisualizaSolicitacao({ solicitacaoSelecionada })}
+          />
         </Menu>
-
 
       </div>
 
@@ -300,8 +289,9 @@ class TabelaDespacho extends Component {
   }
 }
 
-TabelaDespacho.propTypes = {
+TabelaSolicitacoes.propTypes = {
   solicitacoes: PropTypes.array.isRequired,
+  onVisualizaSolicitacao: PropTypes.func.isRequired,
 };
 
-export default TabelaDespacho;
+export default TabelaSolicitacoes;

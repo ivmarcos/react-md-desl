@@ -28,20 +28,24 @@ const Tipos = [
     nome: 'Solicitado',
   },
   {
-    id: 2,
-    nome: 'Despachado',
-  },
-  {
     id: 3,
     nome: 'Rejeitado',
   },
   {
     id: 4,
-    nome: 'Aprovado',
+    nome: 'Cancelado',
   },
   {
     id: 5,
-    nome: 'Cancelado',
+    nome: 'Validado',
+  },
+  {
+    id: 6,
+    nome: 'Despachado',
+  },
+  {
+    id: 7,
+    nome: 'Aprovado',
   },
 ];
 

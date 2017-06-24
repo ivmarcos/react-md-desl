@@ -63,9 +63,7 @@ class SnackbarWrapper extends Component {
 }
 
 SnackbarWrapper.propTypes = {
-  /*eslint-disable */
   mensagens: PropTypes.array,
-  /*eslint-enable*/
 };
 
 

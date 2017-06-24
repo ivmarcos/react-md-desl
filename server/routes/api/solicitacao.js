@@ -35,9 +35,7 @@ function salvaTrecho({ dados, transaction }) {
 }
 
 // salva o historico de status de acordo com a informação anterior
-function salvaHistoricoStatus({ solicitacao, usuario, transaction }) {
-
-  const solicitacaoAtual = solicitacao;
+function salvaHistoricoStatus({ solicitacaoAnterior, solicitacaoAtual, usuario, transaction }) {
 
   const { HistoricoStatus, Solicitacao, TipoStatus } = sequelize.schemas.deslocamento;
 
@@ -82,9 +80,9 @@ module.exports = (router) => {
     const { usuario } = req.session;
 
     sequelize
-      .transaction(transaction => salvaHistoricoStatus({ solicitacao, usuario, transaction })
-        .then(() => salvaSolicitacao({ dados: solicitacao, usuario, transaction }))
-        .then((solicitacaoSalva) => {
+      .transaction(transaction => salvaSolicitacao({ dados: solicitacao, usuario, transaction }))
+        .then(solicitacaoSalva => salvaHistoricoStatus({ solicitacaoAnterior: dados, solicitacaoAtual: solicitacaoSalva, usuario, transaction })
+        .then(() => {
 
           const promisesTrechos = trechos.map((trecho) => {
 

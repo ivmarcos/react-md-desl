@@ -71,7 +71,7 @@ class MaskInput extends PureComponent {
 
     return (
       <div className={CONTAINER_CLASS}>
-        <label
+        <label 
           htmlFor={id}
           className={focus ? LABEL_CLASS_FOCUS : (hasValue || value ? LABEL_CLASS_HAS_VALUE : LABEL_CLASS)}
         >{label}

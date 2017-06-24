@@ -4,7 +4,7 @@ import React from 'react';
 /* eslint-disable */
 import loadHome from 'bundle-loader?lazy!./pages/Home';
 import loadSolicitacoes from 'bundle-loader?lazy!./pages/Solicitacoes';
-import loadDespacho from 'bundle-loader?lazy!./pages/Despacho';
+import loadValidacao from 'bundle-loader?lazy!./pages/Validacao';
 /* eslint-enable */
 
 
@@ -66,7 +66,7 @@ const routes = [
     exact: true,
     label: 'Validação',
     icon: 'check_circle',
-    component: asyncComponent(loadDespacho),
+    component: asyncComponent(loadValidacao),
   },
 ];
 

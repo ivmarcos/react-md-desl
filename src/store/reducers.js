@@ -7,6 +7,7 @@ import solicitacao from './solicitacao';
 import companhia from './companhia';
 import tipoSolicitacao from './tipoSolicitacao';
 import tipoStatus from './tipoStatus';
+import despacho from './despacho';
 
 export default combineReducers({
   app,
@@ -15,6 +16,7 @@ export default combineReducers({
   tipoSolicitacao,
   tipoStatus,
   solicitacao,
+  despacho,
   router,
 });
 

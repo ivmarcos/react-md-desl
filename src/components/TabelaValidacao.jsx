@@ -18,7 +18,7 @@ import { sort, getOffset } from 'lib/util/react';
 
 import { AVATAR_URL, PROFILE_URL } from 'lib/constants';
 
-import './TabelaDespacho.scss';
+import './TabelaValidacao.scss';
 
 const defaultColumns = [
   {
@@ -27,14 +27,29 @@ const defaultColumns = [
     size: 10,
   },
   {
-    label: 'Em',
+    label: 'Criado em',
     key: 'dataHoraInclusao',
     size: 10,
   },
   {
-    label: 'Por ',
-    key: 'usuarioInclusao.nome',
+    label: 'Data Missão',
+    key: 'dataHoraInicio',
+    size: 10,
+  },
+  {
+    label: 'Funcionário',
+    key: 'funcionario.nome',
     size: 25,
+  },
+  {
+    label: 'Valor Estimado',
+    key: 'valorEstimado',
+    size: 10,
+  },
+  {
+    label: 'Status',
+    key: 'tipoStatus.nome',
+    size: 10,
   },
   {
     label: '',
@@ -43,8 +58,24 @@ const defaultColumns = [
   },
 ];
 
+const DESPACHO = {
+  id: 1,
+  label: 'Despachar',
+};
 
-class TabelaDespacho extends Component {
+const CANCELAMENTO = {
+  id: 1,
+  label: 'Cancelar',
+};
+
+const VISUALIZAR = {
+  id: 1,
+  label: 'Visualizar',
+};
+
+const ACOES = [DESPACHO, CANCELAMENTO, VISUALIZAR];
+
+class TabelaValidacao extends Component {
 
   constructor(props) {
 
@@ -139,7 +170,7 @@ class TabelaDespacho extends Component {
   handleCloseMenu(e) {
 
     const isContextMenuClicked = !!e.persist;
-    const isOutsideClicked = !(e.target && e.target.className.indexOf('TabelaDespacho-trigger-contextMenu') > -1);
+    const isOutsideClicked = !(e.target && e.target.className.indexOf('TabelaValidacao-trigger-contextMenu') > -1);
 
     if (isContextMenuClicked || isOutsideClicked) {
 
@@ -162,7 +193,10 @@ class TabelaDespacho extends Component {
 
   handleRowToggle = (row, toggled, count) => {
 
-    const { solicitacoes } = this.props;
+    const {
+      solicitacoes,
+      onSelecionaSolicitacoes,
+    } = this.props;
 
     let selectedRows = [];
 
@@ -176,9 +210,11 @@ class TabelaDespacho extends Component {
 
     }
 
-    this.setState({ count, selectedRows });
+    const solicitacoesSelecionadas = solicitacoes.filter((s, i) => selectedRows.some(selected => i === selected));
 
-  };
+    this.setState({ count, selectedRows }, () => onSelecionaSolicitacoes(solicitacoesSelecionadas));
+
+  }
 
 
   render() {
@@ -196,8 +232,7 @@ class TabelaDespacho extends Component {
 
 
           <DataTable
-            baseId="TabelaDespacho"
-            plain
+            baseId="tabelaValidacao"
           >
 
             <TableHeader>
@@ -216,17 +251,20 @@ class TabelaDespacho extends Component {
 
             <TableBody>
 
-              {despachos.map((despacho) => {
+              {solicitacoes.map((solicitacao) => {
 
                 const {
                   id,
                   dataHoraInclusao,
-                  usuarioInclusao,
+                  funcionario,
+                  dataHoraInicio,
+                  tipoStatus,
+                  valorEstimado,
                 } = solicitacao;
 
                 return (
                   <TableRow
-                    className="TabelaDespacho-linha"
+                    className="TabelaValidacao-linha"
                     key={id}
                   >
 
@@ -239,28 +277,42 @@ class TabelaDespacho extends Component {
                     </TableColumn>
 
                     <TableColumn>
+                      {dateformat(dataHoraInicio, 'mediumDate')}
+                    </TableColumn>
+
+                    <TableColumn>
                       <div className="md-grid md-cell--middle">
                         <Avatar
                           iconSized
                           key="avatar"
-                          src={`${AVATAR_URL}${usuarioInclusao.chave}`}
-                          href={`${PROFILE_URL}${usuarioInclusao.chave}`}
-                          className="TabelaDespacho-avatar"
+                          src={`${AVATAR_URL}${funcionario.chave}`}
+                          href={`${PROFILE_URL}${funcionario.chave}`}
+                          className="TabelaValidacao-avatar"
                         />
                         <span
                           className="md-cell--middle"
                         >
-                          {usuarioInclusao.nomeExibicao || usuarioInclusao.nome}
+                          {funcionario.nomeExibicao || funcionario.nome}
                         </span>
                       </div>
+                    </TableColumn>
+
+                    <TableColumn>
+                      <Currency
+                        value={valorEstimado}
+                      />
+                    </TableColumn>
+
+                    <TableColumn>
+                      {tipoStatus.nome}
                     </TableColumn>
 
                     <TableColumn>
                       <Button
                         icon
                         onClick={event => this.handleOpenMenu({ event, solicitacao })}
-                        className="TabelaDespacho-trigger-contextMenu"
-                        iconClassName="material-icons TabelaDespacho-trigger-contextMenu"
+                        className="TabelaValidacao-trigger-contextMenu"
+                        iconClassName="material-icons TabelaValidacao-trigger-contextMenu"
                       >more_vert
                       </Button>
                     </TableColumn>
@@ -282,14 +334,12 @@ class TabelaDespacho extends Component {
           onClose={this.handleCloseMenu}
           position={Menu.Positions.CONTEXT}
         >
-          <ListItem
-              primaryText="Aprovar"
+          {ACOES.map(acao => (
+            <ListItem
+              primaryText={acao.label}
               onClick={() => this.handleMenuClick(acao)}
             />
-          <ListItem
-              primaryText="Rejeitar"
-              onClick={() => this.handleMenuClick(acao)}
-            />
+          ))}
         </Menu>
 
 
@@ -300,8 +350,9 @@ class TabelaDespacho extends Component {
   }
 }
 
-TabelaDespacho.propTypes = {
+TabelaValidacao.propTypes = {
   solicitacoes: PropTypes.array.isRequired,
+  onSelecionaSolicitacoes: PropTypes.func.isRequired,
 };
 
-export default TabelaDespacho;
+export default TabelaValidacao;

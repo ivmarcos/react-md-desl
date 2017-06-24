@@ -3,18 +3,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Dialog from 'react-md/lib/Dialogs';
+import { connect } from 'react-redux';
 import TextField from 'react-md/lib/TextFields';
 import Toolbar from 'react-md/lib/Toolbars';
 import Button from 'react-md/lib/Buttons/Button';
 import Stepper from 'react-stepper-horizontal';
-import DatePicker from 'react-md/lib/Pickers/DatePickerContainer';
-import TimePicker from 'react-md/lib/Pickers/TimePickerContainer';
 import Card from 'react-md/lib/Cards/Card';
 import CardTitle from 'react-md/lib/Cards/CardTitle';
 import CardText from 'react-md/lib/Cards/CardText';
 import SelectField from 'react-md/lib/SelectFields';
 import VirtualizedSelect from 'react-virtualized-select';
 import update from 'immutability-helper';
+import MaskDatePicker from 'components/forms/MaskDatePicker';
+import Autocomplete from 'components/forms/Autocomplete';
 
 import 'react-virtualized/styles.css';
 import 'react-virtualized-select/styles.css';
@@ -142,7 +143,7 @@ class Solicitacao extends Component {
 
                 {solicitacao.descricao}
 
-                <DatePicker
+                <MaskDatePicker
                   id="dataInicio"
                   label="Data início"
                   displayMode="landscape"
@@ -152,29 +153,9 @@ class Solicitacao extends Component {
                   cancelLabel="Cancelar"
                 />
 
-                <TimePicker
-                  id="horaInicio"
-                  label="Hora início"
-                  displayMode="landscape"
-                  className="md-cell md-cell--6"
-                  onChange={value => this.handleChange({ field: 'dataHoraInicio', value })}
-                  defaultValue={solicitacao.dataHoraInicio}
-                  cancelLabel="Cancelar"
-                />
-
-                <DatePicker
+                <MaskDatePicker
                   id="dataTermino"
                   label="Data término"
-                  displayMode="landscape"
-                  className="md-cell md-cell--6"
-                  onChange={value => this.handleChange({ field: 'dataHoraTermino', value })}
-                  defaultValue={solicitacao.dataHoraTermino}
-                  cancelLabel="Cancelar"
-                />
-
-                <TimePicker
-                  id="horaTermino"
-                  label="Hora término"
                   displayMode="landscape"
                   className="md-cell md-cell--6"
                   onChange={value => this.handleChange({ field: 'dataHoraTermino', value })}
@@ -211,7 +192,7 @@ class Solicitacao extends Component {
               <CardText>
 
 
-                <VirtualizedSelect
+                <Autocomplete
                   options={municipios}
                   itemLabel="nome"
                   onChange={value => this.handleChangeTrecho({ field: 'origem_id', value, index })}
@@ -220,7 +201,7 @@ class Solicitacao extends Component {
                   valueKey="id"
                 />
 
-                <VirtualizedSelect
+                <Autocomplete
                   options={companhias}
                   itemLabel="nome"
                   onChange={value => this.handleChangeTrecho({ field: 'companhia_id', value, index })}
@@ -229,19 +210,9 @@ class Solicitacao extends Component {
                   valueKey="id"
                 />
 
-                <DatePicker
+                <MaskDatePicker
                   id={`dataTrecho_${trecho.id}`}
                   label="Data do Vôo"
-                  displayMode="landscape"
-                  onChange={value => this.handleChangeTrecho({ field: 'dataHoraVoo', value, index })}
-                  value={trecho.dataHoraVoo}
-                  className="md-cell"
-                  cancelLabel="Cancelar"
-                />
-
-                <TimePicker
-                  id={`horaTrecho_${trecho.id}`}
-                  label="Hora do Vôo"
                   displayMode="landscape"
                   onChange={value => this.handleChangeTrecho({ field: 'dataHoraVoo', value, index })}
                   value={trecho.dataHoraVoo}
@@ -290,12 +261,17 @@ class Solicitacao extends Component {
 
     const { solicitacao } = this.state;
 
+    const hasError = Object.keys(solicitacao.erro).length > 0;
 
     const nav = <Button icon onClick={onClose}>close</Button>;
 
     const action = [
       <Button flat label="fechar" onClick={onClose}>close</Button>,
-      <Button flat label="salvar" onClick={() => onSave(solicitacao)}>check</Button>,
+      <Button 
+        flat 
+        label="salvar" 
+        disabled={hasError}
+        onClick={() => onSave(solicitacao)}>check</Button>,
     ];
 
     return (
@@ -338,4 +314,11 @@ Solicitacao.defaultProps = {
   solicitacao: null,
 };
 
-export default Solicitacao;
+
+
+const mapState = (
+  { app: { usuario }, tipoStatus: { tiposStatus }, tipoSolicitacao: {tiposSolicitacao}, municipio: {municipios}, companhia: {companhias} }) =>
+  ({ usuario, tiposStatus, tiposSolicitacao, municipios, companhias });
+
+export default connect(mapState)(Solicitacao);
+

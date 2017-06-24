@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Button from 'react-md/lib/Buttons/Button';
 import TabelaSolicitacoes from 'components/TabelaSolicitacoes';
 import SelectButton from 'components/SelectButton';
-import Solicitacao from 'components/Solicitacao';
+import Solicitacao from 'pages/Solicitacao';
 
 import { buscaMinhasSolicitacoes, novaSolicitacao } from 'store/solicitacao';
 import { TIPOS } from 'store/tipoStatus';
@@ -139,10 +139,6 @@ class Solicitacoes extends Component {
         <Solicitacao
           visivel={exibirSolicitacao}
           solicitacao={solicitacaoSelecionada}
-          municipios={municipios}
-          companhias={companhias}
-          tiposStatus={tiposStatus}
-          tiposSolicitacao={tiposSolicitacao}
           onClose={this.handleCloseSolicitacao}
         />
 
@@ -155,15 +151,12 @@ class Solicitacoes extends Component {
 
 
 const mapState = (
-  { app: { usuario }, solicitacao: { minhas }, municipio: { municipios }, companhia: { companhias }, tipoSolicitacao: { tiposSolicitacao }, tipoStatus: { tiposStatus } }) =>
-  ({ usuario, solicitacoes: minhas, companhias, tiposSolicitacao, tiposStatus, municipios });
+  { app: { usuario }, solicitacao: { minhas }, tipoStatus: { tiposStatus } }) =>
+  ({ usuario, solicitacoes: minhas, tiposStatus });
 
 Solicitacoes.propTypes = {
   usuario: PropTypes.object.isRequired,
   solicitacoes: PropTypes.array.isRequired,
-  municipios: PropTypes.array.isRequired,
-  companhias: PropTypes.array.isRequired,
-  tiposSolicitacao: PropTypes.array.isRequired,
   tiposStatus: PropTypes.array.isRequired,
   buscaMinhasSolicitacoes: PropTypes.func.isRequired,
 };

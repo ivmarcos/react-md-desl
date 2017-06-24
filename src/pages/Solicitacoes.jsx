@@ -5,6 +5,7 @@ import Button from 'react-md/lib/Buttons/Button';
 import TabelaSolicitacoes from 'components/TabelaSolicitacoes';
 import SelectButton from 'components/SelectButton';
 import Solicitacao from 'pages/Solicitacao';
+import ConfirmacaoDialog from 'components/ConfirmacaoDialog';
 
 import { buscaMinhasSolicitacoes, novaSolicitacao } from 'store/solicitacao';
 import { TIPOS } from 'store/tipoStatus';
@@ -26,12 +27,16 @@ class Solicitacoes extends Component {
         tipoStatus_id: TIPOS.SOLICITADO,
         usuarioInclusao_id: props.usuario.id,
       },
+      tituloConfirmacao: 'Algo para confirmar',
+      textoConfirmacao: 'texto para confirmacao',
     };
 
     this.handleNovaSolicitacao = this.handleNovaSolicitacao.bind(this);
     this.handleCloseSolicitacao = this.handleCloseSolicitacao.bind(this);
     this.handleChangeFiltro = this.handleChangeFiltro.bind(this);
     this.handleVisualizaSolicitacao = this.handleVisualizaSolicitacao.bind(this);
+    this.handleCloseConfirmacao = this.handleCloseConfirmacao.bind(this);
+    this.handleConfirma = this.handleConfirma.bind(this);
 
   }
 
@@ -99,10 +104,7 @@ class Solicitacoes extends Component {
 
     const {
       solicitacoes,
-      municipios,
-      companhias,
       tiposStatus,
-      tiposSolicitacao,
     } = this.props;
 
     return (
@@ -141,6 +143,16 @@ class Solicitacoes extends Component {
           solicitacao={solicitacaoSelecionada}
           onClose={this.handleCloseSolicitacao}
         />
+
+        <ConfirmacaoDialog
+          visivel={exibirConfirmacao}
+          onCancel={this.handleCloseConfirmacao}
+          onClose={this.handleCloseConfirmacao}
+          onConfirm={this.handleConfirma}
+          titulo={tituloConfirmacao}
+          texto={textoConfirmacao}
+        />
+
 
       </div>
 

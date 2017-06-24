@@ -1,0 +1,12 @@
+.Select, .Select-value, .Select-control{
+  background: transparent !important;
+  border: none;
+  border-radius: 0px;
+  box-shadow: none;
+  &:focus{
+    box-shadow: none;
+  }
+  &:hover{
+    box-shadow: none;
+  }
+}

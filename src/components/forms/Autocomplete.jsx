@@ -28,6 +28,10 @@ const INPUT_CLASS = 'md-text-field md-text md-text-field--inline-indicator md-fu
 const MENU_CLASS = 'md-paper md-paper--1';
 
 
+//eslint-disable-next-line
+const defaultMenuItemRenderer = ({ item, index }) => <span>{item}</span>;
+
+
 class Autocomplete extends PureComponent {
 
   constructor(props) {
@@ -40,17 +44,19 @@ class Autocomplete extends PureComponent {
 
     this.state = {
       hasFocus: false,
+      openMenu: false,
       value: null,
       items,
     };
 
-    this.handleBlur = this.handleBlur.bind(this);
+    this.blur = this.blur.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.rowRenderer = this.rowRenderer.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.rowRenderer = this.rowRenderer.bind(this);
+
 
   }
 
@@ -58,6 +64,7 @@ class Autocomplete extends PureComponent {
 
     this.setState({
       hasFocus: true,
+      openMenu: true,
     });
 
     const { onFocus } = this.props;
@@ -67,26 +74,55 @@ class Autocomplete extends PureComponent {
 
   }
 
-  handleSelect({ro})
+  handleSelect({ item }) {
+
+    const { onSelect, getSelectedValue } = this.props;
+
+    console.log('item selecionado', item);
+
+    this.setState({
+      value: getSelectedValue({ item }),
+      openMenu: false,
+    },
+    () => {
+
+      if (onSelect) onSelect(item);
+
+    });
+
+  }
 
   handleKeyDown(e) {
 
     const { items } = this.state;
-    const { onSelect } = this.props;
+
+    console.log('e.key', e.key);
 
     //eslint-disable-next-line
     switch (e.key) {
       case 'Enter':
-        if (onSelect && items.length) {
+        if (items.length) {
 
-          onSelect(items[0]);
+          this.handleSelect({ item: items[0] });
 
         }
+        break;
+      case 'Tab':
+        this.blur(e);
         break;
 
     }
 
   }
+
+  closeMenu() {
+
+    this.setState({
+      openMenu: false,
+    });
+
+  }
+
 
   handleChange(e) {
 
@@ -99,23 +135,23 @@ class Autocomplete extends PureComponent {
     this.setState({
       items: items.filter(l => l.match(regex)),
       value,
+      openMenu: true,
     });
 
   }
 
-  handleRowClick({ rowIndex }) {
+  handleRowClick({ item }) {
 
-    this.setState({
-      selected: rowIndex,
-    });
+    console.log('item selecionado', item);
+
+    this.handleSelect({ item });
 
   }
 
-  handleBlur(e) {
+  blur(e) {
 
     this.setState({
       hasFocus: false,
-      hasValue: !!e.target.value,
     });
 
     const { onBlur } = this.props;
@@ -126,22 +162,27 @@ class Autocomplete extends PureComponent {
 
 
   rowRenderer({
-    key,         // Unique key within array of rows
-    index,       // Index of row within collection
-    isScrolling, // The List is currently being scrolled
-    isVisible,   // This row is visible within the List (eg it is not an overscanned row)
-    style,        // Style object to be applied to row (to position it)
+    key,
+    index,
+    style,
+    ...props
     }) {
 
     const { items } = this.state;
 
+    const {
+        menuItemRenderer,
+    } = this.props;
+
+    const item = items[index];
+
     return (
       <div
         key={key}
-        onClick={this.handleRowClick}
+        onClick={() => this.handleRowClick({ item, index, ...props })}
         style={style}
       >
-        {items[index]}
+        {menuItemRenderer({ item, index, ...props })}
       </div>
     );
 
@@ -152,9 +193,10 @@ class Autocomplete extends PureComponent {
     const {
         items,
         hasFocus,
+        openMenu,
     } = this.state;
 
-    if (!hasFocus) return null;
+    if (!hasFocus || !openMenu) return null;
 
     const {
       menuWidth,
@@ -168,6 +210,7 @@ class Autocomplete extends PureComponent {
 
     return (
       <List
+        tabIndex={-1} // makes unfocusable
         width={menuWidth}
         height={menuHeight}
         rowCount={items.length}
@@ -204,13 +247,14 @@ class Autocomplete extends PureComponent {
         >{label}
         </label>
         <input
+          {...props}
           id
           className={INPUT_CLASS}
           onFocus={this.handleFocus}
-          onBlur={this.handleBlur}
+          onKeyDown={this.handleKeyDown}
+          // onBlur={this.handleBlur}
           onChange={this.handleChange}
           value={value}
-          {...props}
         />
         <hr
           className={hasFocus ? HR_CLASS_HAS_FOCUS : HR_CLASS}
@@ -234,7 +278,8 @@ Autocomplete.propTypes = {
   menuMaxItems: PropTypes.number,
   value: PropTypes.any,
   items: PropTypes.array.isRequired,
-  itemLabel: PropTypes.oneOf([PropTypes.func, PropTypes.string]),
+  getSelectedValue: PropTypes.func.isRequired,
+  menuItemRenderer: PropTypes.func.isRequired,
   onSelect: PropTypes.func,
 };
 
@@ -247,9 +292,10 @@ Autocomplete.defaultProps = {
   menuWidth: 300,
   menuRowHeight: 20,
   menuClassName: MENU_CLASS,
-  menuMaxItems: 10,
-  value: null,
-  itemLabel: ({ item }) => item,
+  getSelectedValue: ({ item }) => item,
+  menuItemRenderer: defaultMenuItemRenderer,
+  menuMaxItems: 15,
+  value: <undefined />,
   items: list,
   onSelect: null,
 };

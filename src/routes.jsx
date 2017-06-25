@@ -5,6 +5,7 @@ import React from 'react';
 import loadHome from 'bundle-loader?lazy!./pages/Home';
 import loadSolicitacoes from 'bundle-loader?lazy!./pages/Solicitacoes';
 import loadValidacao from 'bundle-loader?lazy!./pages/Validacao';
+import loadDespachos from 'bundle-loader?lazy!./pages/Despachos';
 /* eslint-enable */
 
 
@@ -67,6 +68,12 @@ const routes = [
     label: 'Validação',
     icon: 'check_circle',
     component: asyncComponent(loadValidacao),
+  }, {
+    path: '/despacho',
+    exact: true,
+    label: 'Despacho',
+    icon: 'check_circle',
+    component: asyncComponent(loadDespachos),
   },
 ];
 

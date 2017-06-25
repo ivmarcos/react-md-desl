@@ -18,7 +18,7 @@ import { sort, getOffset } from 'lib/util/react';
 
 import { AVATAR_URL, PROFILE_URL } from 'lib/constants';
 
-import './TabelaValidacao.scss';
+import './TabelaDespacho.scss';
 
 const defaultColumns = [
   {
@@ -27,29 +27,14 @@ const defaultColumns = [
     size: 10,
   },
   {
-    label: 'Criado em',
+    label: 'Em',
     key: 'dataHoraInclusao',
     size: 10,
   },
   {
-    label: 'Data Missão',
-    key: 'dataHoraInicio',
-    size: 10,
-  },
-  {
-    label: 'Funcionário',
-    key: 'funcionario.nome',
+    label: 'Por ',
+    key: 'usuarioInclusao.nome',
     size: 25,
-  },
-  {
-    label: 'Valor Estimado',
-    key: 'valorEstimado',
-    size: 10,
-  },
-  {
-    label: 'Status',
-    key: 'tipoStatus.nome',
-    size: 10,
   },
   {
     label: '',
@@ -59,7 +44,7 @@ const defaultColumns = [
 ];
 
 
-class TabelaValidacao extends Component {
+class TabelaDespacho extends Component {
 
   constructor(props) {
 
@@ -79,7 +64,6 @@ class TabelaValidacao extends Component {
     this.handleSort = this.handleSort.bind(this);
     this.handleOpenMenu = this.handleOpenMenu.bind(this);
     this.handleCloseMenu = this.handleCloseMenu.bind(this);
-    this.handleRowToggle = this.handleRowToggle.bind(this);
 
   }
 
@@ -155,7 +139,7 @@ class TabelaValidacao extends Component {
   handleCloseMenu(e) {
 
     const isContextMenuClicked = !!e.persist;
-    const isOutsideClicked = !(e.target && e.target.className.indexOf('TabelaValidacao-trigger-contextMenu') > -1);
+    const isOutsideClicked = !(e.target && e.target.className.indexOf('TabelaDespacho-trigger-contextMenu') > -1);
 
     if (isContextMenuClicked || isOutsideClicked) {
 
@@ -176,23 +160,15 @@ class TabelaValidacao extends Component {
   }
 
 
-  handleRowToggle(row, toggled, count) {
+  handleRowToggle = (row, toggled, count) => {
 
-    console.log('handle row toggle', row, toggled, count);
+    const { solicitacoes } = this.props;
 
-    const {
-      solicitacoes,
-      onSelecionaSolicitacoes,
-    } = this.props;
-
-    let {
-      selectedRows,
-    } = this.state;
+    let selectedRows = [];
 
     if (row === -1) {
 
       selectedRows = solicitacoes.map(() => toggled);
-
 
     } else {
 
@@ -200,11 +176,9 @@ class TabelaValidacao extends Component {
 
     }
 
-    const solicitacoesSelecionadas = solicitacoes.filter((s, i) => selectedRows.find((selected, index) => i === index && selected));
+    this.setState({ count, selectedRows });
 
-    this.setState({ count, selectedRows }, () => onSelecionaSolicitacoes(solicitacoesSelecionadas));
-
-  }
+  };
 
 
   render() {
@@ -222,8 +196,8 @@ class TabelaValidacao extends Component {
 
 
           <DataTable
-            baseId="tabelaValidacao"
-            onRowToggle={this.handleRowToggle}
+            baseId="TabelaDespacho"
+            plain
           >
 
             <TableHeader>
@@ -242,20 +216,17 @@ class TabelaValidacao extends Component {
 
             <TableBody>
 
-              {solicitacoes.map((solicitacao) => {
+              {despachos.map((despacho) => {
 
                 const {
                   id,
                   dataHoraInclusao,
-                  funcionario,
-                  dataHoraInicio,
-                  tipoStatus,
-                  valorEstimado,
+                  usuarioInclusao,
                 } = solicitacao;
 
                 return (
                   <TableRow
-                    className="TabelaValidacao-linha"
+                    className="TabelaDespacho-linha"
                     key={id}
                   >
 
@@ -268,42 +239,28 @@ class TabelaValidacao extends Component {
                     </TableColumn>
 
                     <TableColumn>
-                      {dateformat(dataHoraInicio, 'mediumDate')}
-                    </TableColumn>
-
-                    <TableColumn>
                       <div className="md-grid md-cell--middle">
                         <Avatar
                           iconSized
                           key="avatar"
-                          src={`${AVATAR_URL}${funcionario.chave}`}
-                          href={`${PROFILE_URL}${funcionario.chave}`}
-                          className="TabelaValidacao-avatar"
+                          src={`${AVATAR_URL}${usuarioInclusao.chave}`}
+                          href={`${PROFILE_URL}${usuarioInclusao.chave}`}
+                          className="TabelaDespacho-avatar"
                         />
                         <span
                           className="md-cell--middle"
                         >
-                          {funcionario.nomeExibicao || funcionario.nome}
+                          {usuarioInclusao.nomeExibicao || usuarioInclusao.nome}
                         </span>
                       </div>
-                    </TableColumn>
-
-                    <TableColumn>
-                      <Currency
-                        value={valorEstimado}
-                      />
-                    </TableColumn>
-
-                    <TableColumn>
-                      {tipoStatus.nome}
                     </TableColumn>
 
                     <TableColumn>
                       <Button
                         icon
                         onClick={event => this.handleOpenMenu({ event, solicitacao })}
-                        className="TabelaValidacao-trigger-contextMenu"
-                        iconClassName="material-icons TabelaValidacao-trigger-contextMenu"
+                        className="TabelaDespacho-trigger-contextMenu"
+                        iconClassName="material-icons TabelaDespacho-trigger-contextMenu"
                       >more_vert
                       </Button>
                     </TableColumn>
@@ -326,20 +283,13 @@ class TabelaValidacao extends Component {
           position={Menu.Positions.CONTEXT}
         >
           <ListItem
-            primaryText="Abrir"
-          />
+              primaryText="Aprovar"
+              onClick={() => this.handleMenuClick(acao)}
+            />
           <ListItem
-            primaryText="Editar"
-          />
-          <ListItem
-            primaryText="Rejeitar"
-          />
-          <ListItem
-            primaryText="Validar"
-          />
-          <ListItem
-            primaryText="Despachar"
-          />
+              primaryText="Rejeitar"
+              onClick={() => this.handleMenuClick(acao)}
+            />
         </Menu>
 
 
@@ -350,9 +300,8 @@ class TabelaValidacao extends Component {
   }
 }
 
-TabelaValidacao.propTypes = {
+TabelaDespacho.propTypes = {
   solicitacoes: PropTypes.array.isRequired,
-  onSelecionaSolicitacoes: PropTypes.func.isRequired,
 };
 
-export default TabelaValidacao;
+export default TabelaDespacho;

@@ -50,6 +50,7 @@ const solicitacoes = [
       id: 1,
       nome: 'Solicitada',
     },
+    valorEstimado: 300,
     trechos: [
       {
         id: null,
@@ -71,6 +72,7 @@ const solicitacoes = [
       id: 1,
       nome: 'Solicitada',
     },
+    valorEstimado: 300,
     trechos: [
       {
         id: null,

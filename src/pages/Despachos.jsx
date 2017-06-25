@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TabelaDespacho from 'components/TabelaDespacho';
 
-import { buscaDespachoss } from 'store/despacho';
-import { TIPOS } from 'store/tipoStatus';
+import { buscaDespachos } from 'store/despacho';
 
 import './Despachos.scss';
 
@@ -19,6 +18,7 @@ class Despachos extends Component {
     this.state = {
       exibirDespacho: false,
       despachoSelecionado: null,
+      solicitacoesSelecionadas: [],
     };
 
 
@@ -30,7 +30,7 @@ class Despachos extends Component {
 
   componentWillMount() {
 
-  this.props.buscaDespachos(filtro);
+    this.props.buscaDespachos();
 
   }
 
@@ -42,7 +42,7 @@ class Despachos extends Component {
 
   }*/
 
-  
+
   handleCloseDespacho() {
 
     this.setState({
@@ -61,7 +61,7 @@ class Despachos extends Component {
   }
 
 
-  /*handleChangeFiltro({ tipo, value }) {
+  /* handleChangeFiltro({ tipo, value }) {
 
     this.setState(({filtro}) => ({
       filtro: { ...filtro, [tipo]: value },
@@ -74,14 +74,7 @@ class Despachos extends Component {
   render() {
 
     const {
-      exibirSolicitacao,
-      despachoSelecionado,
-      solicitacaoSelecionada,
-      filtro,
-    } = this.state;
-
-    const {
-      solicitacoes,
+      despachos,
     } = this.props;
 
     return (
@@ -103,11 +96,11 @@ class Despachos extends Component {
 
 
 const mapState = (
-  { app: { usuario }, despacho: { despachos }}) =>
+  { app: { usuario }, despacho: { despachos } }) =>
   ({ usuario, despachos });
 
 Despachos.propTypes = {
-  usuario: PropTypes.object.isRequired,
+ // usuario: PropTypes.object.isRequired,
   despachos: PropTypes.array.isRequired,
   buscaDespachos: PropTypes.func.isRequired,
 };

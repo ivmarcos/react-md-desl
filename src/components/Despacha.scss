@@ -1,0 +1,19 @@
+@import '../globals';
+
+.Despacha-card{
+    background-color: $md-orange-50;
+    margin-bottom: 15px;
+}
+.Despacha-card-title {
+    padding-top: 16px;
+    & h2{
+        color: $md-orange-700;
+        font-size: 20px;
+    }
+}
+.Despacha-card-text{
+    & p {
+    color: $md-orange-700;
+
+    }
+}

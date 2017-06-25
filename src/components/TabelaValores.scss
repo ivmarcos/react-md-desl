@@ -1,0 +1,9 @@
+.TabelaValores-linha {
+    & th{
+        height: 30px;
+    }
+    & td{
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+    }
+}

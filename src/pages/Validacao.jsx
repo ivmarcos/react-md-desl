@@ -7,8 +7,9 @@ import SelectButton from 'components/SelectButton';
 import Button from 'react-md/lib/Buttons';
 import { buscaSolicitacoesValidacao } from 'store/solicitacao';
 import { despacha } from 'store/despacho';
+import Despacha from 'components/Despacha';
 
-class Despacho extends Component {
+class Validacao extends Component {
 
 
   constructor(props) {
@@ -17,35 +18,24 @@ class Despacho extends Component {
 
     this.state = {
       detalhe: false,
-      filtro: {
-        tipoStatus_id: 1,
-      },
       solicitacaoSelecionada: null,
+      solicitacoesSelecionadas: [],
     };
 
     this.abreDetalhe = this.abreDetalhe.bind(this);
     this.fechaDetalhe = this.fechaDetalhe.bind(this);
-    this.handleChangeFiltro = this.handleChangeFiltro.bind(this);
     this.handleDespachar = this.handleDespachar.bind(this);
-    this.handleCancelarDespacho = this.handleCancelarDespacho.bind(this);
-    this.handleSelecionaDespacho = this.handleSelecionaDespacho.bind(this);
+    this.handleCancelarValidacao = this.handleCancelarValidacao.bind(this);
+    this.handleSelecionaSolicitacoes = this.handleSelecionaSolicitacoes.bind(this);
 
   }
 
   componentWillMount() {
 
-    this.filtra();
+    this.props.buscaSolicitacoesValidacao();
 
   }
 
-
-  filtra() {
-
-    const { filtro } = this.state;
-
-    this.props.buscaSolicitacoesValidacao(filtro);
-
-  }
 
   abreDetalhe() {
 
@@ -73,11 +63,11 @@ class Despacho extends Component {
 
   }
 
-  handleSelecionaDespacho(solicitacoesSelecionadas) {
+  handleSelecionaSolicitacoes(solicitacoesSelecionadas) {
 
     this.setState({
       solicitacoesSelecionadas,
-      exibirDespacho: true,
+      exibirValidacao: !!solicitacoesSelecionadas.length,
     });
 
   }
@@ -88,10 +78,10 @@ class Despacho extends Component {
 
   }
 
-  handleCancelarDespacho() {
+  handleCancelarValidacao() {
 
     this.setState({
-      exibirDespacho: false,
+      exibirValidacao: false,
     });
 
   }
@@ -101,80 +91,33 @@ class Despacho extends Component {
 
     const {
       detalhe,
-      filtro,
       solicitacaoSelecionada,
       solicitacoesSelecionadas,
-      exibirDespacho,
+      exibirValidacao,
     } = this.state;
 
     const {
       solicitacoes,
-      tiposStatus,
     } = this.props;
 
-    const isSolicitacoesSelecionadas = !!solicitacoesSelecionadas.length;
 
     return (
 
       <div>
 
+        {exibirValidacao &&
 
-        <div
-          className="Solicitacoes-acoes"
-        >
+        <Despacha
+          solicitacoes={solicitacoesSelecionadas}
+          onCancela={this.handleCancelarValidacao}
+          onDespacha={() => console.log('despacha')}
+        />
 
-          <SelectButton
-            id="filtroStatus"
-            placeholder="Number"
-            itemLabel="nome"
-            itemValue="id"
-            onChange={value => this.handleChangeFiltro({ tipo: 'tipoStatus_id', value })}
-            value={filtro.tipoStatus_id}
-            menuItems={tiposStatus}
-          />
-
-
-          <SelectButton
-            id="selectButtonNumbers"
-            placeholder="Number"
-            menuItems={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-          />
-
-        </div>
-
-        <div>
-
-          {solicitacoesSelecionadas.length} selecionadas.
-
-          Comprometido:
-          Realizado:
-          A comprometer (estimado):
-
-          Saldo (estimado):
-
-          Aviso: O valor das passagens geralmente alteram no momento da contratação. Os valores aqui servem apenas em caráter informativo.
-
-          <Button
-            raised
-            primary
-            label="Despachar"
-            onClick={this.handleDespachar}
-          >check
-          </Button>
-
-          <Button
-            raised
-            primary
-            label="Cancelar"
-            onClick={this.handleCancelarDespacho}
-          >close
-          </Button>
-
-        </div>
+        }
 
         <TabelaValidacao
           solicitacoes={solicitacoes}
-          onSelecionaDespacho={this.handleSelecionaDespacho}
+          onSelecionaSolicitacoes={this.handleSelecionaSolicitacoes}
         />
 
         <Solicitacao
@@ -193,11 +136,12 @@ class Despacho extends Component {
 
 const mapState = ({ app: { usuario }, solicitacao: { validacao }, tipoStatus: { tiposStatus } }) => ({ usuario, solicitacoes: validacao, tiposStatus });
 
-Despacho.propTypes = {
+Validacao.propTypes = {
   // usuario: PropTypes.object.isRequired,
+  despacha: PropTypes.func.isRequired,
   solicitacoes: PropTypes.array.isRequired,
   tiposStatus: PropTypes.array.isRequired,
   buscaSolicitacoesValidacao: PropTypes.func.isRequired,
 };
 
-export default connect(mapState, { buscaSolicitacoesValidacao, despacha })(Despacho);
+export default connect(mapState, { buscaSolicitacoesValidacao, despacha })(Validacao);

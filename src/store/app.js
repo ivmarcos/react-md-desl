@@ -9,17 +9,18 @@ const BUSCA_ACESSOS_SUCCESS = 'BUSCA_ACESSOS_SUCCESS';
 
 const ENVIA_MENSAGEM = 'ENVIA_MENSAGEM';
 
-export const buscaUsuarioLogado = () => createAction(BUSCA_USUARIO, api.get('/usuario/logado'));
+// export const buscaUsuarioLogado = () => createAction(BUSCA_USUARIO, api.get('/usuario/logado'));
 
-/*
+
 export const buscaUsuarioLogado = () => dispatch => dispatch({
   type: BUSCA_USUARIO_SUCCESS,
   payload: {
     id: 56805293,
+    chave: 'f6805293',
     nome: 'Marcos Andrei',
   },
 });
-*/
+
 export const buscaAcessos = () => createAction(BUSCA_ACESSOS, api.get('/usuario/acessos'));
 
 export const enviaMensagem = mensagem => dispatch => dispatch({ type: ENVIA_MENSAGEM, msg: mensagem });

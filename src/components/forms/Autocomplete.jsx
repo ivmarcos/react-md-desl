@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import List from 'react-virtualized/dist/commonjs/List';
 
+import './Autocomplete.scss';
+
 function createList(size) {
 
   const list = [];
@@ -25,7 +27,8 @@ const LABEL_CLASS_HAS_FOCUS = 'md-floating-label md-floating-label--floating md-
 const LABEL_CLASS = 'md-floating-label md-floating-label--inactive md-floating-label--inactive-sized';
 const LABEL_CLASS_HAS_VALUE = 'md-floating-label md-floating-label--floating';
 const INPUT_CLASS = 'md-text-field md-text md-text-field--inline-indicator md-full-width md-text-field--floating-margin';
-const MENU_CLASS = 'md-paper md-paper--1';
+const MENU_ITEM_CLASS = 'Autocomplete-menu-item';
+const MENU_CLASS = 'md-paper md-paper--1 Autocomplete-menu';
 
 
 //eslint-disable-next-line
@@ -50,13 +53,21 @@ class Autocomplete extends PureComponent {
     };
 
     this.blur = this.blur.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.setInputRef = this.setInputRef.bind(this);
     this.rowRenderer = this.rowRenderer.bind(this);
 
+
+  }
+
+  setInputRef(element) {
+
+    if (element) this.input = element;
 
   }
 
@@ -82,11 +93,14 @@ class Autocomplete extends PureComponent {
 
     this.setState({
       value: getSelectedValue({ item }),
+      hasFocus: false,
       openMenu: false,
     },
     () => {
 
       if (onSelect) onSelect(item);
+
+      this.input.blur();
 
     });
 
@@ -108,7 +122,7 @@ class Autocomplete extends PureComponent {
         }
         break;
       case 'Tab':
-        this.blur(e);
+        this.input.blur();
         break;
 
     }
@@ -140,8 +154,10 @@ class Autocomplete extends PureComponent {
 
   }
 
-  handleRowClick({ item }) {
+  handleRowClick({ item, event }) {
 
+    event.preventDefault();
+    event.stopPropagation();
     console.log('item selecionado', item);
 
     this.handleSelect({ item });
@@ -160,6 +176,19 @@ class Autocomplete extends PureComponent {
 
   }
 
+  handleBlur(e) {
+
+    const isRelatedToMenu = e.nativeEvent.relatedTarget && e.nativeEvent.relatedTarget.className.indexOf(MENU_CLASS) > -1;
+
+    if (!isRelatedToMenu) {
+
+      this.setState({
+        hasFocus: false,
+      });
+
+    }
+
+  }
 
   rowRenderer({
     key,
@@ -172,6 +201,7 @@ class Autocomplete extends PureComponent {
 
     const {
         menuItemRenderer,
+        menuItemClassName,
     } = this.props;
 
     const item = items[index];
@@ -179,7 +209,8 @@ class Autocomplete extends PureComponent {
     return (
       <div
         key={key}
-        onClick={() => this.handleRowClick({ item, index, ...props })}
+        onClick={event => this.handleRowClick({ event, item, index, ...props })}
+        className={menuItemClassName}
         style={style}
       >
         {menuItemRenderer({ item, index, ...props })}
@@ -188,7 +219,7 @@ class Autocomplete extends PureComponent {
 
   }
 
-  renderList() {
+  renderMenu() {
 
     const {
         items,
@@ -234,32 +265,35 @@ class Autocomplete extends PureComponent {
       onFocus,
       onBlur,
       label,
+      className,
       ...props
     } = this.props;
 
     console.log('value', value);
 
     return (
-      <div className={CONTAINER_CLASS}>
+      <div className={[CONTAINER_CLASS, className].join(' ')}>
         <label
           htmlFor={id}
           className={hasFocus ? LABEL_CLASS_HAS_FOCUS : (value ? LABEL_CLASS_HAS_VALUE : LABEL_CLASS)}
         >{label}
+          {hasFocus ? 'sim, tem focus' : 'nao, nao tem'}
         </label>
         <input
           {...props}
           id
+          ref={this.setInputRef}
           className={INPUT_CLASS}
           onFocus={this.handleFocus}
           onKeyDown={this.handleKeyDown}
-          // onBlur={this.handleBlur}
+          onBlur={this.handleBlur}
           onChange={this.handleChange}
           value={value}
         />
         <hr
           className={hasFocus ? HR_CLASS_HAS_FOCUS : HR_CLASS}
         />
-        {this.renderList()}
+        {this.renderMenu()}
       </div>
     );
 
@@ -276,10 +310,12 @@ Autocomplete.propTypes = {
   menuRowHeight: PropTypes.number,
   menuClassName: PropTypes.string,
   menuMaxItems: PropTypes.number,
+  className: PropTypes.string,
   value: PropTypes.any,
   items: PropTypes.array.isRequired,
   getSelectedValue: PropTypes.func.isRequired,
   menuItemRenderer: PropTypes.func.isRequired,
+  menuItemClassName: PropTypes.string.isRequired,
   onSelect: PropTypes.func,
 };
 
@@ -292,11 +328,13 @@ Autocomplete.defaultProps = {
   menuWidth: 300,
   menuRowHeight: 20,
   menuClassName: MENU_CLASS,
+  menuItemClassName: MENU_ITEM_CLASS,
   getSelectedValue: ({ item }) => item,
   menuItemRenderer: defaultMenuItemRenderer,
   menuMaxItems: 15,
   value: <undefined />,
   items: list,
+  className: undefined,
   onSelect: null,
 };
 

@@ -1,0 +1,10 @@
+.Autocomplete-menu{
+    position: absolute !important;
+    background: #fff;
+    z-index: 1;
+}
+.Autocomplete-menu-item{
+    &:hover{
+    background: rgba(0,0,0,.12)
+    }
+}

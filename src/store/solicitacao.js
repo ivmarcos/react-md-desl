@@ -22,6 +22,8 @@ export function novaSolicitacao({ usuario }) {
 
   return {
     funcionario_id: usuario,
+    dataHoraInicio: null,
+    dataHoraTermino: null,
     trechos: [
       {
         id: null,

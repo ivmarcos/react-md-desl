@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Dialog from 'react-md/lib/Dialogs';
 import PropTypes from 'prop-types';
 
 class ConfirmacaoDialog extends Component {
@@ -17,26 +18,26 @@ class ConfirmacaoDialog extends Component {
     return (
 
       <Dialog
-          id="confirmacaoDialogo"
-          visible={visible}
-          title={titulo}
-          onHide={onClose}
-          aria-labelledby="conteudoDialogo"
-          modal
-          actions={[{
-              onClick: onConfirm,
-              primary: true,
-              label: 'Confirmar',
-            }, {
-              onClick: onConfirm,
-              primary: true,
-              label: 'Cancelar',
-            }]}
-        >
-          <p id="conteudoDialogo" className="md-color--secondary-text">
-              {texto}
-            </p>
-        </Dialog>
+        id="confirmacaoDialogo"
+        visible={visivel}
+        title={titulo}
+        onHide={onClose}
+        aria-labelledby="conteudoDialogo"
+        modal
+        actions={[{
+          onClick: onConfirm,
+          primary: true,
+          label: 'Confirmar',
+        }, {
+          onClick: onCancel,
+          primary: true,
+          label: 'Cancelar',
+        }]}
+      >
+        <p id="conteudoDialogo" className="md-color--secondary-text">
+          {texto}
+        </p>
+      </Dialog>
     );
 
   }

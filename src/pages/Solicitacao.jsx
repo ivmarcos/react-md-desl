@@ -12,14 +12,12 @@ import Card from 'react-md/lib/Cards/Card';
 import CardTitle from 'react-md/lib/Cards/CardTitle';
 import CardText from 'react-md/lib/Cards/CardText';
 import SelectField from 'react-md/lib/SelectFields';
-import VirtualizedSelect from 'react-virtualized-select';
 import update from 'immutability-helper';
 import MaskDatePicker from 'components/forms/MaskDatePicker';
 import Autocomplete from 'components/forms/Autocomplete';
 
 import 'react-virtualized/styles.css';
 import 'react-virtualized-select/styles.css';
-import './Select.css';
 import './Solicitacao.scss';
 
 const NOVO_TRECHO = {
@@ -119,6 +117,8 @@ class Solicitacao extends Component {
 
             <CardText>
 
+              {JSON.stringify(solicitacao)}
+
               <div className="md-grid">
 
                 <SelectField
@@ -150,6 +150,9 @@ class Solicitacao extends Component {
                   className="md-cell md-cell--6"
                   onChange={value => this.handleChange({ field: 'dataHoraInicio', value })}
                   defaultValue={solicitacao.dataHoraInicio}
+                  selectsStart
+                  startDate={solicitacao.dataHoraInicio}
+                  endDate={solicitacao.dataHoraTermino}
                   cancelLabel="Cancelar"
                 />
 
@@ -160,6 +163,9 @@ class Solicitacao extends Component {
                   className="md-cell md-cell--6"
                   onChange={value => this.handleChange({ field: 'dataHoraTermino', value })}
                   defaultValue={solicitacao.dataHoraTermino}
+                  selectsEnd
+                  startDate={solicitacao.dataHoraInicio}
+                  endDate={solicitacao.dataHoraTermino}
                   cancelLabel="Cancelar"
                 />
 
@@ -191,43 +197,50 @@ class Solicitacao extends Component {
 
               <CardText>
 
+                <div className="md-grid">
 
-                <Autocomplete
-                  options={municipios}
-                  itemLabel="nome"
-                  onChange={value => this.handleChangeTrecho({ field: 'origem_id', value, index })}
-                  value={trecho.origem_id}
-                  labelKey="nome"
-                  valueKey="id"
-                />
+                  <Autocomplete
+                    options={municipios}
+                    className="md-cell md-cell--6"
+                    label="Origem"
+                    itemLabel="nome"
+                    onSelect={value => this.handleChangeTrecho({ field: 'origem_id', value, index })}
+                    value={trecho.origem_id}
+                    labelKey="nome"
+                    valueKey="id"
+                  />
 
-                <Autocomplete
-                  options={companhias}
-                  itemLabel="nome"
-                  onChange={value => this.handleChangeTrecho({ field: 'companhia_id', value, index })}
-                  value={trecho.companhia_id}
-                  labelKey="nome"
-                  valueKey="id"
-                />
+                  <Autocomplete
+                    options={companhias}
+                    className="md-cell md-cell--6"
+                    label="Destino"
+                    itemLabel="nome"
+                    onSelect={value => this.handleChangeTrecho({ field: 'companhia_id', value, index })}
+                    value={trecho.companhia_id}
+                    labelKey="nome"
+                    valueKey="id"
+                  />
 
-                <MaskDatePicker
-                  id={`dataTrecho_${trecho.id}`}
-                  label="Data do Vôo"
-                  displayMode="landscape"
-                  onChange={value => this.handleChangeTrecho({ field: 'dataHoraVoo', value, index })}
-                  value={trecho.dataHoraVoo}
-                  className="md-cell"
-                  cancelLabel="Cancelar"
-                />
+                  <MaskDatePicker
+                    id={`dataTrecho_${trecho.id}`}
+                    label="Data do Vôo"
+                    displayMode="landscape"
+                    onChange={value => this.handleChangeTrecho({ field: 'dataHoraVoo', value, index })}
+                    value={trecho.dataHoraVoo}
+                    className="md-cell"
+                    cancelLabel="Cancelar"
+                  />
 
-                <TextField
-                  id="valor"
-                  type="number"
-                  onChange={value => this.handleChangeTrecho({ field: 'numeroVoo', value, index })}
-                  value={trecho.numeroVoo}
-                  label="Número do Vôo"
-                  className="md-cell md-cell--top"
-                />
+                  <TextField
+                    id="valor"
+                    type="number"
+                    onChange={value => this.handleChangeTrecho({ field: 'numeroVoo', value, index })}
+                    value={trecho.numeroVoo}
+                    label="Número do Vôo"
+                    className="md-cell md-cell--top"
+                  />
+
+                </div>
 
               </CardText>
 
@@ -261,17 +274,18 @@ class Solicitacao extends Component {
 
     const { solicitacao } = this.state;
 
-    const hasError = Object.keys(solicitacao.erro).length > 0;
+    const hasError = false;// solicitacao && Object.keys(solicitacao.erro).length > 0;
 
     const nav = <Button icon onClick={onClose}>close</Button>;
 
     const action = [
       <Button flat label="fechar" onClick={onClose}>close</Button>,
-      <Button 
-        flat 
-        label="salvar" 
+      <Button
+        flat
+        label="salvar"
         disabled={hasError}
-        onClick={() => onSave(solicitacao)}>check</Button>,
+        onClick={() => onSave(solicitacao)}
+      >check</Button>,
     ];
 
     return (
@@ -315,9 +329,8 @@ Solicitacao.defaultProps = {
 };
 
 
-
 const mapState = (
-  { app: { usuario }, tipoStatus: { tiposStatus }, tipoSolicitacao: {tiposSolicitacao}, municipio: {municipios}, companhia: {companhias} }) =>
+  { app: { usuario }, tipoStatus: { tiposStatus }, tipoSolicitacao: { tiposSolicitacao }, municipio: { municipios }, companhia: { companhias } }) =>
   ({ usuario, tiposStatus, tiposSolicitacao, municipios, companhias });
 
 export default connect(mapState)(Solicitacao);

@@ -27,6 +27,7 @@ class Solicitacoes extends Component {
         tipoStatus_id: TIPOS.SOLICITADO,
         usuarioInclusao_id: props.usuario.id,
       },
+      exibirConfirmacao: false,
       tituloConfirmacao: 'Algo para confirmar',
       textoConfirmacao: 'texto para confirmacao',
     };
@@ -51,6 +52,22 @@ class Solicitacoes extends Component {
     const { filtro } = this.state;
 
     this.props.buscaMinhasSolicitacoes(filtro);
+
+  }
+
+  handleCloseConfirmacao() {
+
+    this.setState({
+      exibirConfirmacao: false,
+    });
+
+  }
+
+  handleConfirma() {
+
+    this.setState({
+      exibirConfirmacao: false,
+    });
 
   }
 
@@ -100,6 +117,9 @@ class Solicitacoes extends Component {
       exibirSolicitacao,
       solicitacaoSelecionada,
       filtro,
+      exibirConfirmacao,
+      tituloConfirmacao,
+      textoConfirmacao,
     } = this.state;
 
     const {

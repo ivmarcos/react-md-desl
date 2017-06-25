@@ -6,7 +6,7 @@ import Solicitacao from 'pages/Solicitacao';
 import SelectButton from 'components/SelectButton';
 import Button from 'react-md/lib/Buttons';
 import { buscaSolicitacoesValidacao } from 'store/solicitacao';
-import { despacha } from 'store/despacha';
+import { despacha } from 'store/despacho';
 
 class Despacho extends Component {
 

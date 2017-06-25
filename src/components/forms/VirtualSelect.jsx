@@ -363,7 +363,7 @@ VirtualSelect.defaultProps = {
   id: null,
   menuHeight: 300,
   menuWidth: 300,
-  menuRowHeight: 20,
+  menuRowHeight: 35,
   menuClassName: MENU_CLASS,
   menuItemClassName: MENU_ITEM_CLASS,
   getSelectedLabel: defaultGetSelectedLabel,

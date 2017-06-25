@@ -272,7 +272,7 @@ class TabelaSolicitacoes extends Component {
           position={Menu.Positions.CONTEXT}
         >
           <ListItem
-            primaryText="Visualizar"
+            primaryText="Abrir"
             onClick={() => onVisualizaSolicitacao({ solicitacaoSelecionada })}
           />
           <ListItem

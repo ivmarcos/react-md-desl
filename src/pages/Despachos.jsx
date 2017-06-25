@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TabelaDespacho from 'components/TabelaDespacho';
+import Despacho from 'pages/Despacho';
 
 import { buscaDespachos } from 'store/despacho';
 
@@ -9,7 +10,6 @@ import './Despachos.scss';
 
 
 class Despachos extends Component {
-
 
   constructor(props) {
 
@@ -23,7 +23,6 @@ class Despachos extends Component {
 
 
     this.handleCloseDespacho = this.handleCloseDespacho.bind(this);
-   // this.handleChangeFiltro = this.handleChangeFiltro.bind(this);
     this.handleVisualizaDespacho = this.handleVisualizaDespacho.bind(this);
 
   }
@@ -33,15 +32,6 @@ class Despachos extends Component {
     this.props.buscaDespachos();
 
   }
-
- /* filtra() {
-
-    const { filtro } = this.state;
-
-    this.props.buscaDespachos(filtro);
-
-  }*/
-
 
   handleCloseDespacho() {
 
@@ -60,21 +50,15 @@ class Despachos extends Component {
 
   }
 
-
-  /* handleChangeFiltro({ tipo, value }) {
-
-    this.setState(({filtro}) => ({
-      filtro: { ...filtro, [tipo]: value },
-    }),
-      this.filtra,
-    );
-
-  }*/
-
   render() {
 
     const {
+      exibirDespacho,
+    } = this.state;
+
+    const {
       despachos,
+      solicitacoes,
     } = this.props;
 
     return (
@@ -86,6 +70,11 @@ class Despachos extends Component {
           onVisualizaDespacho={this.handleVisualizaDespacho}
         />
 
+        <Despacho
+          visivel={exibirDespacho}
+          solicitacoes={solicitacoes}
+          onClose={this.handleCloseDespacho}
+        />
 
       </div>
 
@@ -101,6 +90,7 @@ const mapState = (
 
 Despachos.propTypes = {
  // usuario: PropTypes.object.isRequired,
+  solicitacoes: PropTypes.func.isRequired,
   despachos: PropTypes.array.isRequired,
   buscaDespachos: PropTypes.func.isRequired,
 };

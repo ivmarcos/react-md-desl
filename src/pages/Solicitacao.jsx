@@ -163,7 +163,7 @@ class Solicitacao extends Component {
 
         <div className="md-cell md-cell--6 md-cell--3-offset">
 
-          <Stepper steps={steps} activeStep={1} />
+          <Stepper steps={steps} activeStep={0} />
 
           <Card
             className="Solicitacao-card"
@@ -174,20 +174,20 @@ class Solicitacao extends Component {
               className="Solicitacao-card-title"
             />
 
-            <CardText>
-
-              {JSON.stringify(solicitacao)}
+            <CardText
+              className="Solicitacao-card-text"
+            >
 
               <div className="md-grid">
 
                 <VirtualSelect
                   options={tiposSolicitacao}
-                  className="md-cell md-cell--6"
+                  className="md-cell md-cell--6 Solicitacao-field"
                   label="Tipo de deslocamento"
                   itemLabel="nome"
                   onSelect={value => this.handleChange({ field: 'tipo_id', value })}
                   value={solicitacao.tipo_id}
-                  items={list}
+                  items={tiposSolicitacao}
                   labelKey="nome"
                   valueKey="id"
                 />
@@ -198,13 +198,13 @@ class Solicitacao extends Component {
                   label="Valor cotado da passagem"
                   onChange={value => this.handleChange({ field: 'valorEstimado', value })}
                   value={solicitacao.valorEstimado}
-                  className="md-cell md-cell--6"
+                  className="md-cell md-cell--6 Solicitacao-field"
                 />
                 <MaskDatePicker
                   id="dataInicio"
                   label="Data e hora do início da missão"
                   displayMode="landscape"
-                  className="md-cell md-cell--6"
+                  className="md-cell md-cell--6 Solicitacao-field"
                   onChange={value => this.handleChange({ field: 'dataHoraInicio', value })}
                   defaultValue={solicitacao.dataHoraInicio}
                   selectsStart
@@ -217,7 +217,7 @@ class Solicitacao extends Component {
                   id="dataTermino"
                   label="Data e hora do término da missão"
                   displayMode="landscape"
-                  className="md-cell md-cell--6"
+                  className="md-cell md-cell--6 Solicitacao-field"
                   onChange={value => this.handleChange({ field: 'dataHoraTermino', value })}
                   defaultValue={solicitacao.dataHoraTermino}
                   selectsEnd
@@ -233,7 +233,7 @@ class Solicitacao extends Component {
                   onChange={value => this.handleChange({ field: 'descricao', value })}
                   label="Descrição da missão"
                   value={solicitacao.descricao}
-                  className="md-cell md-cell--12"
+                  className="md-cell md-cell--12 Solicitacao-field"
                 />
 
 
@@ -261,7 +261,7 @@ class Solicitacao extends Component {
 
                   <VirtualSelect
                     options={municipios}
-                    className="md-cell md-cell--6"
+                    className="md-cell md-cell--6 Solicitacao-field"
                     label="Origem"
                     itemLabel="nome"
                     onSelect={value => this.handleChangeTrecho({ field: 'origem_id', value, index })}
@@ -273,7 +273,7 @@ class Solicitacao extends Component {
 
                   <VirtualSelect
                     options={municipios}
-                    className="md-cell md-cell--6"
+                    className="md-cell md-cell--6 Solicitacao-field"
                     label="Destino"
                     itemLabel="nome"
                     onSelect={value => this.handleChangeTrecho({ field: 'destino_id', value, index })}
@@ -285,7 +285,7 @@ class Solicitacao extends Component {
 
                   <VirtualSelect
                     options={companhias}
-                    className="md-cell md-cell--6"
+                    className="md-cell md-cell--6 Solicitacao-field"
                     label="Companhia"
                     itemLabel="nome"
                     onSelect={value => this.handleChangeTrecho({ field: 'companhia_id', value, index })}
@@ -300,7 +300,7 @@ class Solicitacao extends Component {
                     displayMode="landscape"
                     onChange={value => this.handleChangeTrecho({ field: 'dataHoraVoo', value, index })}
                     value={trecho.dataHoraVoo}
-                    className="md-cell md-cell--6"
+                    className="md-cell md-cell--6 Solicitacao-field"
                     cancelLabel="Cancelar"
                   />
 
@@ -310,7 +310,7 @@ class Solicitacao extends Component {
                     onChange={value => this.handleChangeTrecho({ field: 'numeroVoo', value, index })}
                     value={trecho.numeroVoo}
                     label="Número do Vôo"
-                    className="md-cell md-cell--6"
+                    className="md-cell md-cell--6 Solicitacao-field"
                   />
 
                 </div>

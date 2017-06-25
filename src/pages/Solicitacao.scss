@@ -4,9 +4,11 @@
 .Solicitacao-dialog{
   background-color: $md-grey-50;
 }
-
 .Solicitacao-card{
   margin-top: 15px;
+}
+.Solicitacao-card-text{
+  padding-top: 0px;
 }
 .Solicitacao-card-title{
   padding-top: 16px;
@@ -15,18 +17,7 @@
     font-size: 20px;
   }
 }
-.Select, .Select-value, .Select-control{
-  background: none;
-  border: none;
-  border-radius: 0px;
-  box-shadow: none;
-  &:focus{
-    box-shadow: none;
-  }
-  &:hover{
-    box-shadow: none;
-  }
-}
-.Select-control{
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+.Solicitacao-field{
+  margin-top: 0px;
+  margin-bottom: 0px;
 }

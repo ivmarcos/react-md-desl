@@ -4,6 +4,8 @@
     z-index: 1;
 }
 .VirtualSelect-menu-item{
+    display: flex;
+    align-items: center;
     &:hover{
     background: rgba(0,0,0,.12)
     }

@@ -76,10 +76,11 @@ class MaskDatePicker extends Component {
       maskChar,
       label,
       placeholder,
+      className,
     } = this.props;
 
     return (
-      <div className="md-cell md-cell--6">
+      <div className={className}>
         <DatePicker
           allowSameDay
           customInput={<MaskInput
@@ -109,6 +110,7 @@ MaskDatePicker.propTypes = {
   maskChar: PropTypes.string,
   label: PropTypes.string,
   placeholder: PropTypes.string,
+  className: PropTypes.string,
 };
 
 MaskDatePicker.defaultProps = {
@@ -117,5 +119,6 @@ MaskDatePicker.defaultProps = {
   maskChar: ' ',
   label: undefined,
   placeholder: undefined,
+  className: null,
 };
 export default MaskDatePicker;

@@ -14,15 +14,12 @@ export const despacha = ([solicitacoes]) => createAction(DESPACHA, api.post('/de
 const despachos = [
   {
     id: 1,
-    nome: 'Latam',
-  },
-  {
-    id: 2,
-    nome: 'Gol',
-  },
-  {
-    id: 3,
-    nome: 'Avianca',
+    usuarioInclusao: {
+      id: 1,
+      chave: 'f6805293',
+      nome: 'Marcos Andrei Ivanechtchuk',
+    },
+    solicitacoes: [],
   },
 ];
 

@@ -27,12 +27,12 @@ const defaultColumns = [
     size: 10,
   },
   {
-    label: 'Em',
+    label: 'Despachado em',
     key: 'dataHoraInclusao',
     size: 10,
   },
   {
-    label: 'Por ',
+    label: 'Responsável ',
     key: 'usuarioInclusao.nome',
     size: 25,
   },
@@ -57,8 +57,6 @@ class TabelaDespacho extends Component {
         top: 0,
         left: 0,
       },
-      selectedRows: [],
-      count: 0,
     };
 
     this.handleSort = this.handleSort.bind(this);
@@ -70,20 +68,20 @@ class TabelaDespacho extends Component {
 
   componentWillMount() {
 
-    const { solicitacoes } = this.props;
+    const { despachos } = this.props;
 
     this.setState({
-      solicitacoes,
+      despachos,
     });
 
   }
 
   componentWillReceiveProps(nextProps) {
 
-    if (this.props.solicitacoes !== nextProps.solicitacoes) {
+    if (this.props.despachos !== nextProps.despachos) {
 
       this.setState({
-        solicitacoes: nextProps.solicitacoes,
+        despachos: nextProps.despachos,
       });
 
     }
@@ -92,7 +90,7 @@ class TabelaDespacho extends Component {
 
   handleSort(columnClicked) {
 
-    const { columns, solicitacoes } = this.state;
+    const { columns, despachos } = this.state;
     const column = columnClicked;
 
     column.sorted = !column.sorted;
@@ -109,7 +107,7 @@ class TabelaDespacho extends Component {
     });
 
     this.setState({
-      solicitacoes: sort(solicitacoes, column.key, column.sorted),
+      despachos: sort(despachos, column.key, column.sorted),
     });
 
   }
@@ -159,33 +157,11 @@ class TabelaDespacho extends Component {
 
   }
 
-
-  handleRowToggle = (row, toggled, count) => {
-
-    const { solicitacoes } = this.props;
-
-    let selectedRows = [];
-
-    if (row === -1) {
-
-      selectedRows = solicitacoes.map(() => toggled);
-
-    } else {
-
-      selectedRows[row] = toggled;
-
-    }
-
-    this.setState({ count, selectedRows });
-
-  };
-
-
   render() {
 
     const { columns, listStyle, exibirMenu } = this.state;
 
-    const { solicitacoes } = this.props;
+    const { despachos } = this.props;
 
     return (
 
@@ -222,7 +198,7 @@ class TabelaDespacho extends Component {
                   id,
                   dataHoraInclusao,
                   usuarioInclusao,
-                } = solicitacao;
+                } = despacho;
 
                 return (
                   <TableRow
@@ -258,7 +234,7 @@ class TabelaDespacho extends Component {
                     <TableColumn>
                       <Button
                         icon
-                        onClick={event => this.handleOpenMenu({ event, solicitacao })}
+                        onClick={event => this.handleOpenMenu({ event, despacho })}
                         className="TabelaDespacho-trigger-contextMenu"
                         iconClassName="material-icons TabelaDespacho-trigger-contextMenu"
                       >more_vert
@@ -283,13 +259,14 @@ class TabelaDespacho extends Component {
           position={Menu.Positions.CONTEXT}
         >
           <ListItem
-              primaryText="Aprovar"
-              onClick={() => this.handleMenuClick(acao)}
-            />
+            primaryText="Visualizar"
+          />
           <ListItem
-              primaryText="Rejeitar"
-              onClick={() => this.handleMenuClick(acao)}
-            />
+            primaryText="Aprovar"
+          />
+          <ListItem
+            primaryText="Rejeitar"
+          />
         </Menu>
 
 
@@ -301,7 +278,7 @@ class TabelaDespacho extends Component {
 }
 
 TabelaDespacho.propTypes = {
-  solicitacoes: PropTypes.array.isRequired,
+  despachos: PropTypes.array.isRequired,
 };
 
 export default TabelaDespacho;

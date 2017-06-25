@@ -28,7 +28,7 @@ const Despacha = ({ solicitacoes, onCancela, onDespacha }) => {
         className="Despacha-card-text"
       >
 
-        <p>Aviso: O valor das passagens geralmente alteram no momento da contratação. Os valores aqui servem apenas em caráter informativo.</p>
+        <p>Aviso: Os valores geralmente alteram no momento da contratação. Informações apenas em caráter informativo.</p>
 
         <div className="md-grid">
 

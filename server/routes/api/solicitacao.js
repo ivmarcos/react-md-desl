@@ -1,135 +1,65 @@
 const sequelize = require('bb-common/sequelize');
-
-function salvaSolicitacao({ dados, usuario, transaction }) {
-
-  const { Solicitacao } = sequelize.schemas.deslocamento;
-
-  const isNovaSolicitacao = !dados.id;
-
-  const solicitacao = Solicitacao.build(dados, { isNewRecord: isNovaSolicitacao });
-
-  if (isNovaSolicitacao) {
-
-    solicitacao.usuarioInclusao_id = usuario.id;
-    solicitacao.funcionario_id = solicitacao.funcionario_id || usuario.id;
-
-  } else {
-
-    solicitacao.usuarioAtualizacao_id = usuario.id;
-    solicitacao.dataHoraAtualizacao = new Date();
-
-  }
-
-  return solicitacao.save({ transaction });
-
-}
-
-function salvaTrecho({ dados, transaction }) {
-
-  const { Trecho } = sequelize.schemas.deslocamento;
-
-  const isNovoTrecho = !dados.id;
-
-  return Trecho.build(dados, { isNewRecord: isNovoTrecho }).save({ transaction });
-
-}
-
-// salva o historico de status de acordo com a informação anterior
-function salvaHistoricoStatus({ solicitacaoAnterior, solicitacaoAtual, usuario, transaction }) {
-
-  const { HistoricoStatus, Solicitacao, TipoStatus } = sequelize.schemas.deslocamento;
-
-  const isNovaSolicitacao = !solicitacaoAtual.id;
-
-  const alteracaoAnteriorDB = () => Solicitacao.findById(solicitacaoAtual.id).then(solicitacaoAnterior => Promise.resolve(solicitacaoAnterior.tipoStatus_id != solicitacaoAtual.tipoStatus_id));
-
-  const checaAlteracaoStatus = isNovaSolicitacao ? Promise.resolve(true) : alteracaoAnteriorDB();
-
-  return checaAlteracaoStatus.then((alterado) => {
-
-    if (alterado) {
-
-      return HistoricoStatus.build({
-        solicitacao_id: solicitacaoAtual.id,
-        tipoStatus_id: solicitacaoAtual.tipoStatus_id || TipoStatus.SOLICITADO,
-        usuarioInclusao_id: usuario.id,
-        dataHoraInclusao: new Date(),
-      }).save({ transaction });
-
-    }
-
-    return Promise.resolve();
-
-  });
-
-
-}
-
+const Service = require('services');
 
 module.exports = (router) => {
 
-  router.post('/validacao', (req, res) => {
-
-    res.send(req.session.usuario);
-
-  });
-
-  router.post('/', (req, res, next) => {
+  router.post('/', async (req, res, next) => {
 
     const { solicitacao, trechos } = req.body;
     const { usuario } = req.session;
 
-    sequelize
-      .transaction(transaction => salvaSolicitacao({ dados: solicitacao, usuario, transaction }))
-        .then(solicitacaoSalva => salvaHistoricoStatus({ solicitacaoAnterior: dados, solicitacaoAtual: solicitacaoSalva, usuario, transaction })
-        .then(() => {
+    try {
 
-          const promisesTrechos = trechos.map((trecho) => {
+      const transaction = sequelize.transaction();
 
-            const dados = Object.assign({}, trecho, { solicitacao_id: solicitacaoSalva.id });
+      const solicitacaoSalva = await Service.salvaSolicitacao({ dados: solicitacao, usuario, transaction });
 
-            return salvaTrecho({ dados, usuario, transaction });
+      const salvaTrechos = trechos.map(trecho => Service.salvaTrecho({ dados: trecho, usuario, transaction }));
 
-          });
+      await salvaTrechos();
 
-          return Promise
-            .all(promisesTrechos)
-            .then(() => Promise.resolve(solicitacaoSalva));
+      res.send(solicitacaoSalva);
 
-        }))
-      .then(solicitacaoSalva => res.send(solicitacaoSalva))
-      .catch(next);
+    } catch (err) {
+
+      next(err);
+
+    }
 
   });
 
-  router.post('/valida', (req, res, next) => {
+  router.post('/alteraStatus', async (req, res, next) => {
 
     const { solicitacoes, tipoStatus_id } = req.body;
 
-    const { usuario } = req.session;
+    const { usuario, acessos } = req.session;
 
-    sequelize
-      .transaction((transaction) => {
+    // faz a checagem dos acessos de acordo com o tipo informado
 
-        const promisesAlteracaoStatus = solicitacoes.map(solicitacao => salvaHistoricoStatus({ solicitacao, usuario, transaction }));
+    try {
 
-        const promisesSolicitacoes = solicitacoes.map((solicitacao) => {
+      const transaction = sequelize.transaction();
 
-          const dados = Object.assign({}, solicitacao, { tipoStatus_id });
+      const salvaSolicitacoes = solicitacoes.map((solicitacao) => {
 
-          return salvaSolicitacao({ dados, usuario, transaction });
+        solicitacao.tipoStatus_id = tipoStatus_id;
 
-        });
+        return Service.salvaSolicitacao({ dados: solicitacao, usuario, transaction });
 
-        return Promise
-        .all(promisesAlteracaoStatus)
-        .then(() => promisesSolicitacoes);
+      });
 
-      })
-      .then(solicitacoesSalvas => res.send(solicitacoesSalvas))
-      .catch(next);
+      const solicitacoesSalvas = await Promise.all(salvaSolicitacoes());
+
+      res.send(solicitacoesSalvas);
+
+    } catch (err) {
+
+      next(err);
+
+    }
 
   });
+
 
 };
 

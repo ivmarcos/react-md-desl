@@ -329,9 +329,6 @@ class TabelaValidacao extends Component {
             primaryText="Abrir"
           />
           <ListItem
-            primaryText="Editar"
-          />
-          <ListItem
             primaryText="Rejeitar"
           />
           <ListItem

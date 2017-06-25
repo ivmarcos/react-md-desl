@@ -16,7 +16,7 @@ export const buscaMinhasSolicitacoes = params => createAction(BUSCA_MINHAS_SOLIC
 
 export const buscaSolicitacoesValidacao = params => createAction(BUSCA_SOLICITACOES_VALIDACAO, api.get('/solicitacao', { params: { ...params, include: ['funcionario', 'usuarioInclusao', 'tipoStatus', 'trechos'] } }));
 
-export const modificaStatusSolicitacao = data => createAction(MODIFICA_STATUS_SOLICITACOES, api, get('/solicitacao/alteraStatus', { data }));
+export const modificaStatusSolicitacao = data => createAction(MODIFICA_STATUS_SOLICITACOES, api.post('/solicitacao/alteraStatus', { data }));
 
 export function novaSolicitacao({ usuario }) {
 
@@ -50,6 +50,14 @@ const solicitacoes = [
       id: 1,
       nome: 'Solicitada',
     },
+    trechos: [
+      {
+        id: null,
+      },
+      {
+        id: null,
+      },
+    ],
   },
   {
     id: 2,
@@ -63,6 +71,14 @@ const solicitacoes = [
       id: 1,
       nome: 'Solicitada',
     },
+    trechos: [
+      {
+        id: null,
+      },
+      {
+        id: null,
+      },
+    ],
   },
 ];
 

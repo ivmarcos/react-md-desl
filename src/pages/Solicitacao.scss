@@ -1,5 +1,19 @@
+@import '../globals';
+
+
+.Solicitacao-dialog{
+  background-color: $md-grey-50;
+}
+
 .Solicitacao-card{
   margin-top: 15px;
+}
+.Solicitacao-card-title{
+  padding-top: 16px;
+  padding-bottom: 0px;
+  & h2 {
+    font-size: 20px;
+  }
 }
 .Select, .Select-value, .Select-control{
   background: none;

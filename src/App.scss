@@ -19,10 +19,6 @@ a{
   border-radius: 2px;
 }
 
-.md-data-table--responsive {
-   // overflow-x: inherit !important;
-}
-
 /* definição de classes personalizadas, olhar antes a documentação do react-md para evitar reinventar a roda:
   https://react-md.mlaursen.com/customization/colors
   https://react-md.mlaursen.com/customization/media-queries
@@ -45,8 +41,12 @@ a{
   text-align: center;
 }
 
-.md-center{
+.md-cell--center{
   margin-left: auto; 
   margin-right: auto;
   text-align: center;
+}
+
+.link{
+  cursor: pointer;
 }

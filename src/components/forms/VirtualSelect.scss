@@ -1,12 +1,10 @@
-.Select, .Select-value, .Select-control{
-  background: transparent !important;
-  border: none;
-  border-radius: 0px;
-  box-shadow: none;
-  &:focus{
-    box-shadow: none;
-  }
-  &:hover{
-    box-shadow: none;
-  }
+.VirtualSelect-menu{
+    position: absolute !important;
+    background: #fff;
+    z-index: 1;
+}
+.VirtualSelect-menu-item{
+    &:hover{
+    background: rgba(0,0,0,.12)
+    }
 }

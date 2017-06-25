@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import Compartilhamento from '../src/components/Compartilhamento';
 import Input from '../src/components/forms/Input';
 import MaskInput from '../src/components/forms/MaskInput';
 import CustomInput from '../src/components/forms/CustomInput';
@@ -50,11 +49,93 @@ storiesOf('DatePicker', module)
   />
 ))
 
-.add('React Date Picker With Mask Input', () => (
-  <MaskDatePicker />
-));
+.add('React Date Picker With Mask Input', () => {
 
 
+  class Wrapper extends Component {
+
+    state = {
+      date: null,
+    }
+
+    handleChange = (date) => {
+
+      console.log('date selected', date);
+
+    }
+
+    render() {
+
+      const { date } = this.state;
+
+      return (
+        <MaskDatePicker
+          defaultValue={date}
+          onChange={this.handleChange}
+        />
+      );
+
+    }
+
+  }
+
+  return (<Wrapper />);
+
+});
+
+/*
+.add('React Date Picker With Mask Input and Range', () => {
+
+
+  class Wrapper extends Component {
+
+    state = {
+      date: null,
+      endDate: moment(),
+      startDate: moment(),
+    }
+
+    handleChange = (date) => {
+
+      console.log('date selected', date);
+
+    }
+
+    render() {
+
+      const {
+        date,
+        endDate,
+        startDate,
+      } = this.state;
+
+      return (
+        <div>
+        <MaskDatePicker
+          defaultValue={date}
+          selectsStart
+          startDate={this.state.startDate}
+          endDate={this.state.endDate}
+          onChange={this.handleChange}
+        />
+         <MaskDatePicker
+          defaultValue={date}
+           selectsEnd
+          startDate={this.state.startDate}
+          endDate={this.state.endDate}
+          onChange={this.handleChange}
+        />
+        </div>
+      );
+
+    }
+
+  }
+
+  return (<Wrapper />);
+
+});
+*/
 storiesOf('Autocomplete', module)
 .add('Básico', () => (
   <Autocomplete />

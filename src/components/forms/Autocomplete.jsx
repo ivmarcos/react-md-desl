@@ -4,22 +4,6 @@ import List from 'react-virtualized/dist/commonjs/List';
 
 import './Autocomplete.scss';
 
-function createList(size) {
-
-  const list = [];
-  for (let i = 0; i <= size; i++) {
-
-    list.push(`teste_${i}`);
-
-  }
-
-  return list;
-
-}
-
-// List data as an array of strings
-const list = createList(10000);
-
 const CONTAINER_CLASS = 'md-text-field-container md-full-width md-text-field-container--input';
 const HR_CLASS = 'md-divider md-divider--text-field md-divider--expand-from-left';
 const HR_CLASS_HAS_FOCUS = 'md-divider md-divider--text-field md-divider--expand-from-left md-divider--text-field-expanded md-divider--text-field-active';
@@ -30,9 +14,17 @@ const INPUT_CLASS = 'md-text-field md-text md-text-field--inline-indicator md-fu
 const MENU_ITEM_CLASS = 'Autocomplete-menu-item';
 const MENU_CLASS = 'md-paper md-paper--1 Autocomplete-menu';
 
+function safeGet(object, prop) {
+
+  return object ? object[prop] : object;
+
+}
 
 //eslint-disable-next-line
-const defaultMenuItemRenderer = ({ item, index }) => <span>{item}</span>;
+const defaultMenuItemRenderer = ({ item, index, labelKey }) => <span>{safeGet(item, labelKey) || ''}</span>;
+
+//eslint-disable-next-line
+const defaultGetSelectedLabel = ({ item, labelKey }) => labelKey ? (safeGet(item, labelKey) || '') : item;
 
 
 class Autocomplete extends PureComponent {
@@ -43,12 +35,15 @@ class Autocomplete extends PureComponent {
 
     const {
         items,
+        defaultValue,
+        labelKey,
+        getSelectedLabel,
     } = props;
 
     this.state = {
       hasFocus: false,
       openMenu: false,
-      value: null,
+      value: getSelectedLabel({ item: defaultValue, labelKey }),
       items,
     };
 
@@ -65,11 +60,38 @@ class Autocomplete extends PureComponent {
 
   }
 
+
+  componentWillReceiveProps(nextProps) {
+
+    let state;
+
+    if (this.props.items !== nextProps.items) {
+
+      state.items = nextProps.items;
+
+    }
+
+    if (this.props.defaultValue !== nextProps.defaultValue) {
+
+      const {
+        getSelectedLabel,
+        labelKey,
+      } = this.props;
+
+      state.value = getSelectedLabel({ item: nextProps.defaultValue, labelKey });
+
+    }
+
+    if (state) this.setState(state);
+
+  }
+
   setInputRef(element) {
 
     if (element) this.input = element;
 
   }
+
 
   handleFocus(e) {
 
@@ -87,18 +109,26 @@ class Autocomplete extends PureComponent {
 
   handleSelect({ item }) {
 
-    const { onSelect, getSelectedValue } = this.props;
+    const {
+      onSelect,
+      getSelectedLabel,
+      labelKey,
+    } = this.props;
 
     console.log('item selecionado', item);
 
     this.setState({
-      value: getSelectedValue({ item }),
+      value: getSelectedLabel({ item, labelKey }),
       hasFocus: false,
       openMenu: false,
     },
     () => {
 
-      if (onSelect) onSelect(item);
+      if (onSelect) {
+
+        onSelect(item);
+
+      }
 
       this.input.blur();
 
@@ -142,12 +172,16 @@ class Autocomplete extends PureComponent {
 
     const value = e.target.value;
 
-    const { items } = this.props;
+    const {
+      items,
+      labelKey,
+      getSelectedLabel,
+    } = this.props;
 
     const regex = new RegExp(value, 'ig');
 
     this.setState({
-      items: items.filter(l => l.match(regex)),
+      items: items.filter(l => getSelectedLabel({ item: l, labelKey }).match(regex)),
       value,
       openMenu: true,
     });
@@ -178,7 +212,9 @@ class Autocomplete extends PureComponent {
 
   handleBlur(e) {
 
-    const isRelatedToMenu = e.nativeEvent.relatedTarget && e.nativeEvent.relatedTarget.className.indexOf(MENU_CLASS) > -1;
+    e.persist();
+
+    const isRelatedToMenu = e.relatedTarget && e.relatedTarget.className.indexOf(MENU_CLASS) > -1;
 
     if (!isRelatedToMenu) {
 
@@ -202,6 +238,7 @@ class Autocomplete extends PureComponent {
     const {
         menuItemRenderer,
         menuItemClassName,
+        labelKey,
     } = this.props;
 
     const item = items[index];
@@ -213,7 +250,7 @@ class Autocomplete extends PureComponent {
         className={menuItemClassName}
         style={style}
       >
-        {menuItemRenderer({ item, index, ...props })}
+        {menuItemRenderer({ item, index, labelKey, ...props })}
       </div>
     );
 
@@ -226,6 +263,8 @@ class Autocomplete extends PureComponent {
         hasFocus,
         openMenu,
     } = this.state;
+
+    console.log('items', items);
 
     if (!hasFocus || !openMenu) return null;
 
@@ -262,11 +301,8 @@ class Autocomplete extends PureComponent {
 
     const {
       id,
-      onFocus,
-      onBlur,
       label,
       className,
-      ...props
     } = this.props;
 
     console.log('value', value);
@@ -277,10 +313,8 @@ class Autocomplete extends PureComponent {
           htmlFor={id}
           className={hasFocus ? LABEL_CLASS_HAS_FOCUS : (value ? LABEL_CLASS_HAS_VALUE : LABEL_CLASS)}
         >{label}
-          {hasFocus ? 'sim, tem focus' : 'nao, nao tem'}
         </label>
         <input
-          {...props}
           id
           ref={this.setInputRef}
           className={INPUT_CLASS}
@@ -313,10 +347,13 @@ Autocomplete.propTypes = {
   className: PropTypes.string,
   value: PropTypes.any,
   items: PropTypes.array.isRequired,
-  getSelectedValue: PropTypes.func.isRequired,
+  getSelectedLabel: PropTypes.func.isRequired,
   menuItemRenderer: PropTypes.func.isRequired,
   menuItemClassName: PropTypes.string.isRequired,
+  defaultValue: PropTypes.any,
   onSelect: PropTypes.func,
+  labelKey: PropTypes.string,
+  valueKey: PropTypes.string,
 };
 
 Autocomplete.defaultProps = {
@@ -329,13 +366,15 @@ Autocomplete.defaultProps = {
   menuRowHeight: 20,
   menuClassName: MENU_CLASS,
   menuItemClassName: MENU_ITEM_CLASS,
-  getSelectedValue: ({ item }) => item,
+  getSelectedLabel: defaultGetSelectedLabel,
   menuItemRenderer: defaultMenuItemRenderer,
   menuMaxItems: 15,
-  value: <undefined />,
-  items: list,
-  className: undefined,
+  defaultValue: undefined,
+  items: [],
+  className: null,
   onSelect: null,
+  labelKey: null,
+  valueKey: null,
 };
 
 export default Autocomplete;

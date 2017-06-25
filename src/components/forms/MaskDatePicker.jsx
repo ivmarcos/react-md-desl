@@ -15,26 +15,29 @@ class MaskDatePicker extends Component {
 
     super(props);
 
-    const { defaultValue } = props;
-
     this.state = {
-      selected: defaultValue ? moment(defaultValue) : null,
+      selected: null,
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeRaw = this.handleChangeRaw.bind(this);
 
   }
 
-  componentWillReceiveProps(nextProps) {
+  handleChangeRaw(e) {
 
-    if (this.props.defaultValue !== nextProps.defaultValue) {
 
-      console.log('novoooo valor', nextProps.defaultValue);
-      this.setState({
-        selected: nextProps.defaultValue ? moment(nextProps.defaultValue) : null,
-      });
+    const value = e.target.value;
 
-    }
+    console.log('RAW', value);
+
+    const {
+      dateFormat,
+    } = this.props;
+
+    const selected = moment(value, dateFormat);
+
+    if (selected.isValid()) this.handleChange(selected);
 
   }
 
@@ -52,7 +55,7 @@ class MaskDatePicker extends Component {
 
     let date = selected;
 
-    if (selected) {
+    if (date) {
 
       date = selected._i ? moment(selected._i, selected._f).toDate() : selected._d;
 
@@ -73,15 +76,10 @@ class MaskDatePicker extends Component {
       maskChar,
       label,
       placeholder,
-      className,
-      selectsEnd,
-      selectsStart,
-      startDate,
-      endDate,
     } = this.props;
 
     return (
-      <div className={className}>
+      <div className="md-cell md-cell--6">
         <DatePicker
           allowSameDay
           customInput={<MaskInput
@@ -89,16 +87,14 @@ class MaskDatePicker extends Component {
             maskChar={maskChar}
             label={label}
             placeholder={placeholder}
+            // onChange={e => console.log('inner!', e.target.value)}
           />}
           selected={selected}
           className="md-text-field md-text md-text-field--inline-indicator md-full-width md-text-field--floating-margin"
           dateFormat="DD/MM/YYYY HH:mm"
           onChange={this.handleChange}
-          onKeyDown={e => console.log('e', e)}
-          selectsEnd={selectsEnd}
-          selectsStart={selectsStart}
-          startDate={startDate}
-          endDate={endDate}
+          onChangeRaw={this.handleChangeRaw}
+          // onKeyDown={e => console.log('e', e)}
         />
       </div>
     );
@@ -112,27 +108,14 @@ MaskDatePicker.propTypes = {
   onChange: PropTypes.func,
   maskChar: PropTypes.string,
   label: PropTypes.string,
-  className: PropTypes.string,
   placeholder: PropTypes.string,
-  defaultValue: PropTypes.any,
-  selectsEnd: PropTypes.any,
-  selectsStart: PropTypes.any,
-  startDate: PropTypes.any,
-  endDate: PropTypes.any,
 };
 
 MaskDatePicker.defaultProps = {
-  className: undefined,
   onChange: undefined,
   mask: '99/99/9999 99:99',
   maskChar: ' ',
   label: undefined,
   placeholder: undefined,
-  defaultValue: null,
-  selectsEnd: undefined,
-  selectsStart: undefined,
-  startDate: undefined,
-  endDate: undefined,
-
 };
 export default MaskDatePicker;

@@ -14,13 +14,71 @@ import CardText from 'react-md/lib/Cards/CardText';
 import SelectField from 'react-md/lib/SelectFields';
 import update from 'immutability-helper';
 import MaskDatePicker from 'components/forms/MaskDatePicker';
-import Autocomplete from 'components/forms/Autocomplete';
+import VirtualSelect from 'components/forms/VirtualSelect';
 
 import 'react-virtualized/styles.css';
 import 'react-virtualized-select/styles.css';
 import './Solicitacao.scss';
 
+
+function createList(size) {
+
+  const list = [];
+  for (let i = 0; i <= size; i++) {
+
+    list.push({
+      id: i,
+      nome: `teste_${i}`,
+    });
+
+  }
+
+  return list;
+
+}
+
+// List data as an array of strings
+const list = createList(10000);
+
+//eslint-disable-next-line
+const municipioMenuItemRenderer = ({ item, index, labelKey }) => <span>{`${item.nome} - ${item.uf}`}</span>;
+
+/*eslint-disable */
+function solicitacaoValida(solicitacao) {
+
+  let erros;
+
+  if (solicitacao._erros) {
+
+    return solicitacao._erros;
+
+  }
+
+  erros.trechos = solicitacao.trechos.map(trecho => trechoValido(trecho));
+
+  return erros;
+
+}
+/*eslint-enable */
+
+
+function validaIntervalos(inicio, fim) {
+
+  if (!inicio) return 'Insira data e hora de início';
+  if (!fim) return 'Insira data e hora de término';
+  if (inicio > fim) return 'Data e hora de término não pode ser anterior à de início';
+  return '';
+
+}
+
+function trechoValido(trecho) {
+
+  return validaIntervalos(trecho.dataHoraInicio, trecho.dataHoraTermino);
+
+}
+
 const NOVO_TRECHO = {
+  id: null,
 };
 
 class Solicitacao extends Component {
@@ -103,7 +161,7 @@ class Solicitacao extends Component {
 
       <div className="md-grid md-toolbar-relative">
 
-        <div className="md-cell md-cell--6 md-cell--3-offset md-cell--center">
+        <div className="md-cell md-cell--6 md-cell--3-offset">
 
           <Stepper steps={steps} activeStep={1} />
 
@@ -113,6 +171,7 @@ class Solicitacao extends Component {
 
             <CardTitle
               title="Solicitação"
+              className="Solicitacao-card-title"
             />
 
             <CardText>
@@ -121,31 +180,29 @@ class Solicitacao extends Component {
 
               <div className="md-grid">
 
-                <SelectField
-                  id="tipo_id"
-                  placeholder="Tipo"
-                  menuItems={tiposSolicitacao}
-                  itemLabel="nome"
-                  itemValue="id"
-                  onChange={value => this.handleChange({ field: 'tipo_id', value })}
-                  position={SelectField.Positions.BELOW}
-                  value={solicitacao.tipo_id}
+                <VirtualSelect
+                  options={tiposSolicitacao}
                   className="md-cell md-cell--6"
+                  label="Tipo de deslocamento"
+                  itemLabel="nome"
+                  onSelect={value => this.handleChange({ field: 'tipo_id', value })}
+                  value={solicitacao.tipo_id}
+                  items={list}
+                  labelKey="nome"
+                  valueKey="id"
                 />
 
                 <TextField
-                  id="descricao"
-                  onChange={value => this.handleChange({ field: 'descricao', value })}
-                  label="Descrição"
-                  value={solicitacao.descricao}
+                  id="valor"
+                  type="number"
+                  label="Valor cotado da passagem"
+                  onChange={value => this.handleChange({ field: 'valorEstimado', value })}
+                  value={solicitacao.valorEstimado}
                   className="md-cell md-cell--6"
                 />
-
-                {solicitacao.descricao}
-
                 <MaskDatePicker
                   id="dataInicio"
-                  label="Data início"
+                  label="Data e hora do início da missão"
                   displayMode="landscape"
                   className="md-cell md-cell--6"
                   onChange={value => this.handleChange({ field: 'dataHoraInicio', value })}
@@ -158,7 +215,7 @@ class Solicitacao extends Component {
 
                 <MaskDatePicker
                   id="dataTermino"
-                  label="Data término"
+                  label="Data e hora do término da missão"
                   displayMode="landscape"
                   className="md-cell md-cell--6"
                   onChange={value => this.handleChange({ field: 'dataHoraTermino', value })}
@@ -169,14 +226,16 @@ class Solicitacao extends Component {
                   cancelLabel="Cancelar"
                 />
 
+
                 <TextField
-                  id="valor"
-                  type="number"
-                  label="Valor"
-                  onChange={value => this.handleChange({ field: 'valorEstimado', value })}
-                  value={solicitacao.valorEstimado}
-                  className="md-cell md-cell--6"
+                  id="descricao"
+                  rows={2}
+                  onChange={value => this.handleChange({ field: 'descricao', value })}
+                  label="Descrição da missão"
+                  value={solicitacao.descricao}
+                  className="md-cell md-cell--12"
                 />
+
 
               </div>
 
@@ -193,27 +252,41 @@ class Solicitacao extends Component {
 
               <CardTitle
                 title={`Trecho #${index + 1}`}
+                className="Solicitacao-card-title"
               />
 
               <CardText>
 
                 <div className="md-grid">
 
-                  <Autocomplete
+                  <VirtualSelect
                     options={municipios}
                     className="md-cell md-cell--6"
                     label="Origem"
                     itemLabel="nome"
                     onSelect={value => this.handleChangeTrecho({ field: 'origem_id', value, index })}
+                    menuItemRenderer={municipioMenuItemRenderer}
                     value={trecho.origem_id}
                     labelKey="nome"
                     valueKey="id"
                   />
 
-                  <Autocomplete
-                    options={companhias}
+                  <VirtualSelect
+                    options={municipios}
                     className="md-cell md-cell--6"
                     label="Destino"
+                    itemLabel="nome"
+                    onSelect={value => this.handleChangeTrecho({ field: 'destino_id', value, index })}
+                    menuItemRenderer={municipioMenuItemRenderer}
+                    value={trecho.destino_id}
+                    labelKey="nome"
+                    valueKey="id"
+                  />
+
+                  <VirtualSelect
+                    options={companhias}
+                    className="md-cell md-cell--6"
+                    label="Companhia"
                     itemLabel="nome"
                     onSelect={value => this.handleChangeTrecho({ field: 'companhia_id', value, index })}
                     value={trecho.companhia_id}
@@ -223,11 +296,11 @@ class Solicitacao extends Component {
 
                   <MaskDatePicker
                     id={`dataTrecho_${trecho.id}`}
-                    label="Data do Vôo"
+                    label="Data e hora do Vôo"
                     displayMode="landscape"
                     onChange={value => this.handleChangeTrecho({ field: 'dataHoraVoo', value, index })}
                     value={trecho.dataHoraVoo}
-                    className="md-cell"
+                    className="md-cell md-cell--6"
                     cancelLabel="Cancelar"
                   />
 
@@ -237,7 +310,7 @@ class Solicitacao extends Component {
                     onChange={value => this.handleChangeTrecho({ field: 'numeroVoo', value, index })}
                     value={trecho.numeroVoo}
                     label="Número do Vôo"
-                    className="md-cell md-cell--top"
+                    className="md-cell md-cell--6"
                   />
 
                 </div>
@@ -295,6 +368,7 @@ class Solicitacao extends Component {
         onHide={onClose}
         fullPage
         aria-label="Nova solicitação"
+        dialogClassName="Solicitacao-dialog"
       >
         <Toolbar
           colored

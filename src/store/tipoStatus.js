@@ -44,6 +44,15 @@ export const TIPOS = {
   CANCELADO: 5,
 };
 
+export const TipoStatusSolicitacao = {
+  SOLICITADO: 1,
+  VALIDADO: 2,
+  DESPACHADO: 2,
+  REJEITADO: 3,
+  APROVADO: 4,
+  CANCELADO: 5,
+};
+
 
 const INITIAL_STATE = {
   tiposStatus: Tipos,

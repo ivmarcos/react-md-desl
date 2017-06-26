@@ -77,6 +77,32 @@ function trechoValido(trecho) {
 
 }
 
+
+const ValidacaoSolicitacao = {
+  tipo_id: ({ value }) => {
+
+    if (!value) return 'Valor obrigatório.';
+
+
+  },
+  dataHoraInicio: ({ value }) => {
+
+    if (!value) return 'Valor obrigatório.';
+
+  },
+};
+
+const ValidacaoTrecho = {
+  dataHoraInicio: ({ value }) => {
+
+    if (!value) return 'Valor obrigatório.';
+
+    return undefined;
+
+  },
+};
+
+
 const NOVO_TRECHO = {
   id: null,
 };
@@ -108,12 +134,17 @@ class Solicitacao extends Component {
 
   handleChange({ field, value }) {
 
-    const { solicitacao } = this.state;
+    let { solicitacao } = this.state;
 
     console.log('field', field, 'value', value);
 
+    const erro = ValidacaoSolicitacao[field]({ solicitacao, value });
+
+    //eslint-disable-next-line
+    solicitacao = { [field]: value, _erro: { [field]: erro } };
+
     this.setState({
-      solicitacao: { ...solicitacao, [field]: value },
+      solicitacao,
     });
 
   }
@@ -124,7 +155,12 @@ class Solicitacao extends Component {
 
     console.log('field', field, 'value', value, 'index', index);
 
-    const trecho = { ...trechos[index], [field]: value };
+    let trecho = { ...trechos[index], [field]: value };
+
+    const erro = ValidacaoTrecho[field]({ trecho, value });
+
+    //eslint-disable-next-line
+    trecho = { [field]: value, _erro: { [field]: erro } };
 
     this.setState({
       solicitacao: { ...solicitacao, trechos: update(trechos, { [index]: { $set: trecho } }) },
@@ -185,7 +221,7 @@ class Solicitacao extends Component {
                   className="md-cell md-cell--6 Solicitacao-field"
                   label="Tipo de deslocamento"
                   itemLabel="nome"
-                  onSelect={value => this.handleChange({ field: 'tipo_id', value })}
+                  onSelect={value => this.handleChange({ field: 'tipo_id', value: value.id })}
                   value={solicitacao.tipo_id}
                   items={tiposSolicitacao}
                   labelKey="nome"
@@ -200,6 +236,7 @@ class Solicitacao extends Component {
                   value={solicitacao.valorEstimado}
                   className="md-cell md-cell--6 Solicitacao-field"
                 />
+
                 <MaskDatePicker
                   id="dataInicio"
                   label="Data e hora do início da missão"
@@ -347,7 +384,10 @@ class Solicitacao extends Component {
 
     const { solicitacao } = this.state;
 
-    const hasError = false;// solicitacao && Object.keys(solicitacao.erro).length > 0;
+    //eslint-disable-next-line
+    const erros = solicitacao ? (solicitacao._erro || {}) : {};
+
+    const hasError = solicitacao ? false : Object.keys(erros).length > 0;
 
     const nav = <Button icon onClick={onClose}>close</Button>;
 

@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TabelaValidacao from 'components/TabelaValidacao';
 import Solicitacao from 'pages/Solicitacao';
-import SelectButton from 'components/SelectButton';
-import Button from 'react-md/lib/Buttons';
-import { buscaSolicitacoesValidacao } from 'store/solicitacao';
-import { despacha } from 'store/despacho';
+
+
+import { buscaSolicitacoesValidacao, alteraStatusSolicitacao } from 'store/solicitacao';
 import Despacha from 'components/Despacha';
 
 class Validacao extends Component {
@@ -27,6 +26,7 @@ class Validacao extends Component {
     this.handleDespachar = this.handleDespachar.bind(this);
     this.handleCancelarValidacao = this.handleCancelarValidacao.bind(this);
     this.handleSelecionaSolicitacoes = this.handleSelecionaSolicitacoes.bind(this);
+    this.handleAlteraStatusSolicitacao = this.handleAlteraStatusSolicitacao.bind(this);
 
   }
 
@@ -72,17 +72,17 @@ class Validacao extends Component {
 
   }
 
-  handleDespachar(solicitacoes) {
-
-    this.props.despacha(solicitacoes);
-
-  }
-
   handleCancelarValidacao() {
 
     this.setState({
       exibirValidacao: false,
     });
+
+  }
+
+  handleAlteraStatusSolicitacao({ solicitacao, tipoStatus_id }) {
+
+    this.props.alteraStatusSolicitacao({ solicitacao, tipoStatus_id });
 
   }
 
@@ -118,6 +118,7 @@ class Validacao extends Component {
         <TabelaValidacao
           solicitacoes={solicitacoes}
           onSelecionaSolicitacoes={this.handleSelecionaSolicitacoes}
+          onAlteraStatusSolicitacao={this.handleAlteraStatusSolicitacao}
         />
 
         <Solicitacao
@@ -138,10 +139,9 @@ const mapState = ({ app: { usuario }, solicitacao: { validacao }, tipoStatus: { 
 
 Validacao.propTypes = {
   // usuario: PropTypes.object.isRequired,
-  despacha: PropTypes.func.isRequired,
+  alteraStatusSolicitacao: PropTypes.func.isRequired,
   solicitacoes: PropTypes.array.isRequired,
-  tiposStatus: PropTypes.array.isRequired,
   buscaSolicitacoesValidacao: PropTypes.func.isRequired,
 };
 
-export default connect(mapState, { buscaSolicitacoesValidacao, despacha })(Validacao);
+export default connect(mapState, { buscaSolicitacoesValidacao, alteraStatusSolicitacao })(Validacao);

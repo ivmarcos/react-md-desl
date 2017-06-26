@@ -40,10 +40,13 @@ class Autocomplete extends PureComponent {
         getSelectedLabel,
     } = props;
 
+    //eslint-disable-next-line
+    const item = items.find(item => safeGet(item, labelKey) == defaultValue);
+
     this.state = {
       hasFocus: false,
       openMenu: false,
-      value: getSelectedLabel({ item: defaultValue, labelKey }),
+      value: getSelectedLabel({ item, labelKey }),
       items,
     };
 
@@ -78,7 +81,12 @@ class Autocomplete extends PureComponent {
         labelKey,
       } = this.props;
 
-      state.value = getSelectedLabel({ item: nextProps.defaultValue, labelKey });
+      const items = nextProps.items || this.props.items;
+
+      //eslint-disable-next-line
+      const item = items.find(item => safeGet(item, labelKey) == nextProps.defaultValue);
+
+      state.value = getSelectedLabel({ item, labelKey });
 
     }
 

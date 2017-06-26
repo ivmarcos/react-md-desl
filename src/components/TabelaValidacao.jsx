@@ -18,6 +18,8 @@ import { sort, getOffset } from 'lib/util/react';
 
 import { AVATAR_URL, PROFILE_URL } from 'lib/constants';
 
+import { TipoStatusSolicitacao } from 'store/tipoStatus';
+
 import './TabelaValidacao.scss';
 
 const defaultColumns = [
@@ -66,9 +68,10 @@ class TabelaValidacao extends Component {
     super(props);
 
     this.state = {
+      solicitacao: null,
       columns: defaultColumns,
       exibirMenu: false,
-      listStyle: {
+      menuListStyle: {
         top: 0,
         left: 0,
       },
@@ -130,7 +133,7 @@ class TabelaValidacao extends Component {
 
   }
 
-  handleOpenMenu({ event }) {
+  handleOpenMenu({ event, solicitacao }) {
 
     const element = event.target;
 
@@ -143,11 +146,12 @@ class TabelaValidacao extends Component {
     const top = offset.top - 300;
 
     this.setState({
-      listStyle: {
+      menuListStyle: {
         top,
         left,
       },
       exibirMenu: true,
+      solicitacao,
     });
 
   }
@@ -209,9 +213,18 @@ class TabelaValidacao extends Component {
 
   render() {
 
-    const { columns, listStyle, exibirMenu } = this.state;
+    const {
+      columns,
+      menuListStyle,
+      exibirMenu,
+      solicitacao,
+    } = this.state;
 
-    const { solicitacoes } = this.props;
+    const {
+      solicitacoes,
+      onAbreSolicitacao,
+      onAlteraStatusSolicitacao,
+    } = this.props;
 
     return (
 
@@ -321,21 +334,25 @@ class TabelaValidacao extends Component {
 
         <Menu
           isOpen={exibirMenu}
-          listStyle={listStyle}
+          listStyle={menuListStyle}
           onClose={this.handleCloseMenu}
           position={Menu.Positions.CONTEXT}
         >
           <ListItem
             primaryText="Abrir"
+            onClick={onAbreSolicitacao}
           />
           <ListItem
             primaryText="Rejeitar"
+            onClick={onAlteraStatusSolicitacao({ tipoStatus_id: TipoStatusSolicitacao.REJEITADO, solicitacao })}
           />
           <ListItem
             primaryText="Validar"
+            onClick={onAlteraStatusSolicitacao({ tipoStatus_id: TipoStatusSolicitacao.REJEITADO, solicitacao })}
           />
           <ListItem
             primaryText="Despachar"
+            onClick={onAlteraStatusSolicitacao({ tipoStatus_id: TipoStatusSolicitacao.DESPACHADO, solicitacao })}
           />
         </Menu>
 
@@ -350,6 +367,8 @@ class TabelaValidacao extends Component {
 TabelaValidacao.propTypes = {
   solicitacoes: PropTypes.array.isRequired,
   onSelecionaSolicitacoes: PropTypes.func.isRequired,
+  onAbreSolicitacao: PropTypes.func.isRequired,
+  onAlteraStatusSolicitacao: PropTypes.func.isRequired,
 };
 
 export default TabelaValidacao;

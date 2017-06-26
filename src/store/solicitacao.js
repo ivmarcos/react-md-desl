@@ -9,14 +9,14 @@ const BUSCA_MINHAS_SOLICITACOES_SUCCESS = 'BUSCA_MINHAS_SOLICITACOES_SUCCESS';
 const BUSCA_SOLICITACOES_VALIDACAO = 'BUSCA_SOLICITACOES_VALIDACAO';
 const BUSCA_SOLICITACOES_VALIDACAO_SUCCESS = 'BUSCA_SOLICITACOES_VALIDACAO_SUCCESS';
 
-const MODIFICA_STATUS_SOLICITACOES = 'MODIFICA_STATUS_SOLICITACOES';
-const MODIFICA_STATUS_SOLICITACOES_SUCCESS = 'MODIFICA_STATUS_SOLICITACOES_SUCCESS';
+const ALTERA_STATUS_SOLICITACOES = 'ALTERA_STATUS_SOLICITACOES';
+const ALTERA_STATUS_SOLICITACOES_SUCCESS = 'ALTERA_STATUS_SOLICITACOES_SUCCESS';
 
 export const buscaMinhasSolicitacoes = params => createAction(BUSCA_MINHAS_SOLICITACOES, api.get('/solicitacao', { params: { ...params, include: ['funcionario', 'usuarioInclusao', 'tipoStatus', 'trechos'] } }));
 
 export const buscaSolicitacoesValidacao = params => createAction(BUSCA_SOLICITACOES_VALIDACAO, api.get('/solicitacao', { params: { ...params, include: ['funcionario', 'usuarioInclusao', 'tipoStatus', 'trechos'] } }));
 
-export const modificaStatusSolicitacao = data => createAction(MODIFICA_STATUS_SOLICITACOES, api.post('/solicitacao/alteraStatus', { data }));
+export const alteraStatusSolicitacao = data => createAction(ALTERA_STATUS_SOLICITACOES, api.post('/solicitacao/alteraStatus', { data }));
 
 export function novaSolicitacao({ usuario }) {
 
@@ -120,7 +120,7 @@ const reducer = (state = INITIAL_STATE, action) => {
 
       return { ...state, validacao: action.payload };
 
-    case DESPACHA_SUCCESS: case MODIFICA_STATUS_SOLICITACOES_SUCCESS: {
+    case DESPACHA_SUCCESS: case ALTERA_STATUS_SOLICITACOES_SUCCESS: {
 
       const solicitacoesAtualizadas = action.payload;
 
